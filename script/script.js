@@ -93,18 +93,18 @@ function closePokemonModal() {
 
 //Modale Navigation zum vorherigen Pokémon
 function beforePokemon() {
-    currentPokemonIndex--;
-    if (currentPokemonIndex < 0) {
-        currentPokemonIndex = pokedexData.length - 1;
-    }
-    openPokemonModal(currentPokemonIndex);
+  currentPokemonIndex--;
+  if (currentPokemonIndex < 0) {
+    currentPokemonIndex = pokedexData.length - 1;
+  }
+  openPokemonModal(currentPokemonIndex);
 }
 
 //Modale Navigation zum nächsten Pokémon
 function nextPokemon() {
-    currentPokemonIndex++;
-    if (currentPokemonIndex >= pokedexData.length) {
-        currentPokemonIndex = 0;
-    }
-    openPokemonModal(currentPokemonIndex);
+  currentPokemonIndex++;
+  if (currentPokemonIndex >= pokedexData.length) {
+    currentPokemonIndex = 0;
+  }
+  openPokemonModal(currentPokemonIndex);
 }

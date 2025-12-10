@@ -5,4 +5,7 @@ design/
 project_info/
 .prettierrc
 package.json
+package-lock.json
 .gitignore
+node_modules/
+.DS_Store
