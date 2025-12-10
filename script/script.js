@@ -6,8 +6,9 @@ function onloadInit() {
   loadLocalData();
 }
 
+//laden der Pokemon-Daten aus der API (Index, Name, URL)
 async function loadLocalData() {
-  let isLoading = true; // Ladezustand setzen für Ladeanzeige
+  //let isLoading = true; // Ladezustand setzen für Ladeanzeige
   pokedexData = await fetch(API_URL_LIMITED)
     .then((response) => response.json()) // konvertiere Antwort in JSON
     .then((data) => data.results) // extrahiere das results-Array
@@ -20,41 +21,55 @@ async function loadLocalData() {
   loadPokemonDetails(); // Rufe die Funktion zum Laden der Pokémon-Details auf
 }
 
+//Details für jedes Pokémon laden (Bildurl, Typ, Fähigkeiten, etc.)
 async function loadPokemonDetails() {
-  isLoading = true; // Ladezustand setzen für Ladeanzeige
+  showLoadingSpinner(true);
   for (let i = 0; i < pokedexData.length; i++) {
     let pokemon = pokedexData[i];
     let details = await fetchPokemonDetails(pokemon.url); //Achtung, hier iterieren wir über jedes Pokémon und holen die Details
     pokedexData[i] = { ...pokemon, details }; // Füge die Details zum Pokémon-Objekt hinzu, durch die dreipunkt-Syntax wird ein neues Objekt erstellt
   }
   console.table(pokedexData); // Protokolliere die aktualisierten Daten mit Details
+  showLoadingSpinner(false);
   renderPokedexListView(); // Rufe die Funktion zum Rendern der Liste auf
-  isLoading = false; // Ladezustand zurücksetzen
+  //isLoading = false; // Ladezustand zurücksetzen
 }
 
-async function fetchPokemonDetails(url) { //Details eines einzelnen Pokémons holen
+//Details eines einzelnen Pokémons holen
+async function fetchPokemonDetails(url) { 
   return await fetch(url)
     .then((response) => response.json())
     .catch((error) => console.error("Error fetching pokemon details:", error));
 }
 
+//Ladeanzeige anzeigen/verbergen
+function showLoadingSpinner(isLoading) {
+  let container = document.getElementById("pokedex-container");
+  if (isLoading) {
+    container.innerHTML = loadingSpinnerHTML();
+  }
+}
+
+
+//Rendern der Pokédex-Liste in der HTML-Seite
 function renderPokedexListView() {
   let listContainer = document.getElementById("pokedex-container");
   listContainer.innerHTML = ""; // Leere den Container vor dem Rendern
 
   pokedexData.forEach((pokemon, index) => {
+    listContainer.innerHTML += getPokemonCardHTML(pokemon, index);
     // Iteriere über jedes Pokémon im Array
-    let listItem = document.createElement("div"); // Erstelle ein neues Div-Element für jedes Pokémon
-    listItem.className = "pokedex-item"; // Füge eine Klasse für Styling hinzu
-    //Bild und Namen
-    //listItem.innerText = `${index + 1}. ${pokemon.name}`; // Setze den Text des Elements auf den Namen des Pokémon
+    // let listItem = document.createElement("div"); // Erstelle ein neues Div-Element für jedes Pokémon
+    // listItem.className = "pokedex-item"; // Füge eine Klasse für Styling hinzu
+    // //Bild und Namen
+    // //listItem.innerText = `${index + 1}. ${pokemon.name}`; // Setze den Text des Elements auf den Namen des Pokémon
 
-    //HTML-Inhalt mit Bild und Name
-    listItem.innerHTML = `  
-      <img src="${pokemon.details.sprites.front_default}" alt="${pokemon.name}">
-      <p>${index + 1}. ${pokemon.name}</p>
-    `;
+    // //HTML-Inhalt mit Bild und Name
+    // listItem.innerHTML = `  
+    //   <img src="${pokemon.details.sprites.front_default}" alt="${pokemon.name}">
+    //   <p>${index + 1}. ${pokemon.name}</p>
+    // `;
 
-    listContainer.appendChild(listItem); // Füge das Element dem Container hinzu
+    // listContainer.appendChild(listItem); // Füge das Element dem Container hinzu 
   });
 }
