@@ -133,6 +133,12 @@
   margin-bottom: 15px;
 }
 
+.modal-button {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 @media (max-width: 768px) {
   #pokedex-container {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

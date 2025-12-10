@@ -2,6 +2,8 @@ const API_URL = "https://pokeapi.co/api/v2/pokemon/";
 
 const API_URL_LIMITED = "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0";
 
+let currentPokemonIndex = 0;
+
 function onloadInit() {
   showLoadingSpinner(true);
   loadLocalData();
@@ -22,14 +24,12 @@ async function loadLocalData() {
   loadPokemonDetails(); // Rufe die Funktion zum Laden der Pokémon-Details auf
 }
 
-
 //Details eines einzelnen Pokémons holen
 async function fetchPokemonDetails(url) {
   return await fetch(url)
     .then((response) => response.json())
     .catch((error) => console.error("Error fetching pokemon details:", error));
 }
-
 
 //Details für jedes Pokémon laden (Bildurl, Typ, Fähigkeiten, etc.)
 async function loadPokemonDetails() {
@@ -43,7 +43,6 @@ async function loadPokemonDetails() {
   renderPokedexListView(); // Rufe die Funktion zum Rendern der Liste auf
   //isLoading = false; // Ladezustand zurücksetzen
 }
-
 
 //Ladeanzeige anzeigen/verbergen
 function showLoadingSpinner(isLoading) {
@@ -80,13 +79,32 @@ function renderPokedexListView() {
 
 //Öffnen des Modals mit Pokémon-Details
 function openPokemonModal(index) {
-  const pokemon = pokedexData[index];
+  currentPokemonIndex = index;
+  const pokemon = pokedexData[currentPokemonIndex];
   const modalContainer = document.getElementById("modal-container");
-  modalContainer.innerHTML = getPokemonModalHTML(pokemon, index);
+  modalContainer.innerHTML = getPokemonModalHTML(pokemon, currentPokemonIndex);
 }
 
 //Schließen des Pokémon-Modals
 function closePokemonModal() {
   const modalContainer = document.getElementById("modal-container");
   modalContainer.innerHTML = "";
+}
+
+//Modale Navigation zum vorherigen Pokémon
+function beforePokemon() {
+    currentPokemonIndex--;
+    if (currentPokemonIndex < 0) {
+        currentPokemonIndex = pokedexData.length - 1;
+    }
+    openPokemonModal(currentPokemonIndex);
+}
+
+//Modale Navigation zum nächsten Pokémon
+function nextPokemon() {
+    currentPokemonIndex++;
+    if (currentPokemonIndex >= pokedexData.length) {
+        currentPokemonIndex = 0;
+    }
+    openPokemonModal(currentPokemonIndex);
 }
