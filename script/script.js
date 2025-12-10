@@ -3,6 +3,7 @@ const API_URL = "https://pokeapi.co/api/v2/pokemon/";
 const API_URL_LIMITED = "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0";
 
 function onloadInit() {
+  showLoadingSpinner(true);
   loadLocalData();
 }
 
@@ -21,9 +22,17 @@ async function loadLocalData() {
   loadPokemonDetails(); // Rufe die Funktion zum Laden der Pokémon-Details auf
 }
 
+
+//Details eines einzelnen Pokémons holen
+async function fetchPokemonDetails(url) {
+  return await fetch(url)
+    .then((response) => response.json())
+    .catch((error) => console.error("Error fetching pokemon details:", error));
+}
+
+
 //Details für jedes Pokémon laden (Bildurl, Typ, Fähigkeiten, etc.)
 async function loadPokemonDetails() {
-  showLoadingSpinner(true);
   for (let i = 0; i < pokedexData.length; i++) {
     let pokemon = pokedexData[i];
     let details = await fetchPokemonDetails(pokemon.url); //Achtung, hier iterieren wir über jedes Pokémon und holen die Details
@@ -35,23 +44,16 @@ async function loadPokemonDetails() {
   //isLoading = false; // Ladezustand zurücksetzen
 }
 
-//Details eines einzelnen Pokémons holen
-async function fetchPokemonDetails(url) { 
-  return await fetch(url)
-    .then((response) => response.json())
-    .catch((error) => console.error("Error fetching pokemon details:", error));
-}
 
 //Ladeanzeige anzeigen/verbergen
 function showLoadingSpinner(isLoading) {
-    let overlay = document.getElementById("loading-overlay");
+  let overlay = document.getElementById("loading-overlay");
   if (isLoading) {
     overlay.classList.remove("d-none");
   } else {
     overlay.classList.add("d-none");
   }
 }
-
 
 //Rendern der Pokédex-Liste in der HTML-Seite
 function renderPokedexListView() {
@@ -67,11 +69,24 @@ function renderPokedexListView() {
     // //listItem.innerText = `${index + 1}. ${pokemon.name}`; // Setze den Text des Elements auf den Namen des Pokémon
 
     // //HTML-Inhalt mit Bild und Name
-    // listItem.innerHTML = `  
+    // listItem.innerHTML = `
     //   <img src="${pokemon.details.sprites.front_default}" alt="${pokemon.name}">
     //   <p>${index + 1}. ${pokemon.name}</p>
     // `;
 
-    // listContainer.appendChild(listItem); // Füge das Element dem Container hinzu 
+    // listContainer.appendChild(listItem); // Füge das Element dem Container hinzu
   });
+}
+
+//Öffnen des Modals mit Pokémon-Details
+function openPokemonModal(index) {
+  const pokemon = pokedexData[index];
+  const modalContainer = document.getElementById("modal-container");
+  modalContainer.innerHTML = getPokemonModalHTML(pokemon, index);
+}
+
+//Schließen des Pokémon-Modals
+function closePokemonModal() {
+  const modalContainer = document.getElementById("modal-container");
+  modalContainer.innerHTML = "";
 }
