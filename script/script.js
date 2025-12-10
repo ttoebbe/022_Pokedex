@@ -108,3 +108,30 @@ function nextPokemon() {
   }
   openPokemonModal(currentPokemonIndex);
 }
+
+//mehr Pokémon laden
+async function loadMorePokemon() {
+  showLoadingSpinner(true);
+  let offset = pokedexData.length; // Aktuelle Anzahl der geladenen Pokémon
+  let limit = 10; // Anzahl der hinzuzufügenden Pokémon
+  let apiUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+
+  try {
+    let response = await fetch(apiUrl);
+    let data = await response.json();
+    let newPokemon = data.results;
+
+    // Füge die neuen Pokémon zur Liste hinzu
+    for (let i = 0; i < newPokemon.length; i++) {
+      let pokemon = newPokemon[i];
+      let details = await fetchPokemonDetails(pokemon.url);
+      pokedexData.push({ ...pokemon, details });
+    }
+
+    renderPokedexListView();
+  } catch (error) {
+    console.error("Error loading more Pokémon:", error);
+  } finally {
+    showLoadingSpinner(false);
+  }
+}

@@ -90,17 +90,17 @@ function getPokemonModalHTML(pokemon, index) {
 
           <div class="modal-button">
             <div>
-              <button class="before-button" onclick="beforePokemon()">
+              <button class="before-button btn btn-primary" onclick="beforePokemon()">
                 ⬅️
               </button>
             </div>
             <div>
-              <button class="close-button" onclick="closePokemonModal()">
+              <button class="close-button btn btn-danger" onclick="closePokemonModal()">
                 Close
               </button>
             </div>
             <div>
-              <button class="next-button" onclick="nextPokemon()">➡️</button>
+              <button class="next-button btn btn-primary" onclick="nextPokemon()">➡️</button>
             </div>
           </div>
         </div>
