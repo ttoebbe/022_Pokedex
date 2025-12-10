@@ -44,9 +44,11 @@ async function fetchPokemonDetails(url) {
 
 //Ladeanzeige anzeigen/verbergen
 function showLoadingSpinner(isLoading) {
-  let container = document.getElementById("pokedex-container");
+    let overlay = document.getElementById("loading-overlay");
   if (isLoading) {
-    container.innerHTML = loadingSpinnerHTML();
+    overlay.classList.remove("d-none");
+  } else {
+    overlay.classList.add("d-none");
   }
 }
 
