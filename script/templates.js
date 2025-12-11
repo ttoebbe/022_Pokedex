@@ -99,8 +99,8 @@ function openPokemonModal(index) {
         <div class="modal-button">
           <div>
             <button
-              class="before-button btn btn-primary"
-              onclick="beforePokemon()"
+              class="btn btn-primary"
+              onclick="previousPokemon()"
             >
               ⬅️
             </button>
@@ -114,7 +114,7 @@ function openPokemonModal(index) {
             </button>
           </div>
           <div>
-            <button class="next-button btn btn-primary" onclick="nextPokemon()">
+            <button class="btn btn-primary" onclick="nextPokemon()">
               ➡️
             </button>
           </div>

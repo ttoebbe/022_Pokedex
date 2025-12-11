@@ -48,7 +48,7 @@ function closePokemonModal() {
 }
 
 //Modale Navigation zum vorherigen Pokémon
-function beforePokemon() {
+function previousPokemon() {
   currentPokemonIndex--;
   if (currentPokemonIndex < 0) {
     currentPokemonIndex = pokedexData.length - 1;
@@ -85,15 +85,13 @@ async function loadMorePokemon() {
   //localStorage nur mit den nötigen Daten füllen, da er nach dem Update überläuft :-(
   // erst entfernen, dann einmalig schreiben (statt in Schleife)
   localStorage.removeItem("pokedexData");
-  const snapshot = pokedexData.map((p) => ({
-    id: p.details.id,
-    name: p.name,
-    types: p.details.types.map((t) => t.type.name),
-    sprite:
-      p.details.sprites.other?.["official-artwork"]?.front_default ||
-      p.details.sprites.front_default,
-    height: p.details.height,
-    weight: p.details.weight,
+  const snapshot = pokedexData.map((pokemon) => ({
+    id: pokemon.details.id,
+    name: pokemon.name,
+    types: pokemon.details.types.map((typeEntry) => typeEntry.type.name),
+    sprite: pokemon.details.sprites.front_default,
+    height: pokemon.details.height,
+    weight: pokemon.details.weight,
   }));
   localStorage.setItem("pokedexData", JSON.stringify(snapshot));
 
