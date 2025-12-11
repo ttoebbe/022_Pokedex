@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./styles/assets.css" />
 
     <script src="./script/db.js"></script>
-    <script src="./script/script.js"></script>
+
     <script src="./script/templates.js"></script>
 
     <title>Pokedex</title>
@@ -31,18 +31,27 @@
     <div id="modal-container"></div>
 
     <header>
-        <h1>Pokedex</h1>
+      <h1>Pokedex</h1>
     </header>
 
     <main>
-    
       <div id="pokedex-container"></div>
 
-      <button id="more-pokemon-btn" class="btn btn-warning" onclick="loadMorePokemon()">you want more Pokémon?</button>
+      <button
+        id="more-pokemon-btn"
+        class="btn btn-warning"
+        onclick="loadMorePokemon()"
+      >
+        more Pokémon?
+      </button>
     </main>
 
     <footer>
       <p>&copy; footer Text</p>
     </footer>
   </body>
-</html>
+
+  
+  <script src="./script/script.js"></script>
+
+  </html>

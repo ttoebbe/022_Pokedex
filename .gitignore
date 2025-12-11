@@ -9,3 +9,6 @@ package-lock.json
 .gitignore
 node_modules/
 .DS_Store
+api-viewer.css
+api-viewer.js
+api-viewer.html
