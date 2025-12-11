@@ -17,7 +17,7 @@ async function loadLocalData() {
   pokedexData = data.results; // Daten in die Variable laden
   await loadPokemonDetails();
   console.table(pokedexData);
-  localStorage.setItem("pokedexData", JSON.stringify(data)); // Daten im lokalen Speicher speichern
+  // localStorage.setItem("pokedexData", JSON.stringify(data)); // Daten im lokalen Speicher speichern
 }
 
 //Pokémon-Details von der API holen
@@ -84,16 +84,16 @@ async function loadMorePokemon() {
   //localStorage.setItem("pokedexData", JSON.stringify(pokedexData));
   //localStorage nur mit den nötigen Daten füllen, da er nach dem Update überläuft :-(
   // erst entfernen, dann einmalig schreiben (statt in Schleife)
-  localStorage.removeItem("pokedexData");
-  const snapshot = pokedexData.map((pokemon) => ({
-    id: pokemon.details.id,
-    name: pokemon.name,
-    types: pokemon.details.types.map((typeEntry) => typeEntry.type.name),
-    sprite: pokemon.details.sprites.front_default,
-    height: pokemon.details.height,
-    weight: pokemon.details.weight,
-  }));
-  localStorage.setItem("pokedexData", JSON.stringify(snapshot));
+  // localStorage.removeItem("pokedexData");
+  // const snapshot = pokedexData.map((pokemon) => ({
+  //   id: pokemon.details.id,
+  //   name: pokemon.name,
+  //   types: pokemon.details.types.map((typeEntry) => typeEntry.type.name),
+  //   sprite: pokemon.details.sprites.front_default,
+  //   height: pokemon.details.height,
+  //   weight: pokemon.details.weight,
+  // }));
+  // localStorage.setItem("pokedexData", JSON.stringify(snapshot));
 
   showLoadingSpinner(false);
   renderPokedexListView();
