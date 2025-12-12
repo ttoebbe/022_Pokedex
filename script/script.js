@@ -9,6 +9,8 @@ async function onloadInit() {
   renderPokedexListView(); // Pokédex-Liste rendern
 }
 
+
+
 //laden initialer Daten aus der API in den lokalen Speicher und in die Variable pokedexData
 async function loadLocalData() {
   const response = await fetch(BASE_URL); //nur Name und URL der Pokémon holen
@@ -16,7 +18,7 @@ async function loadLocalData() {
 
   pokedexData = data.results; // Daten in die Variable laden
   console.log("Pokémon ohne Details...");
-  console.table(pokedexData);
+  // console.table(pokedexData);
 
   await loadPokemonDetails(); //ID (nicht ArrayID), Sprite (Bild) und Fähigkeiten der Pokémon holen
   console.table(pokedexData);
@@ -26,48 +28,23 @@ async function loadLocalData() {
 //Pokémon-Details von der API holen
 
 async function loadPokemonDetails() {
-
-
   for (let i = 0; i < pokedexData.length; i++) {
-.
-
     const entry = pokedexData[i];
-    // Wir lesen das aktuelle Element aus dem Array in die Konstante "entry".
-    // Vor dem Ersetzen enthält "entry" typischerweise nur { name, url } (die erste API-Antwort).
-    // Wir behalten den ursprünglichen Namen aus "entry.name", weil das später in das Snapshot-Objekt übernommen wird.
-
-    const details = await fetch(entry.url).then((response) =>
-      response.json(),
+    const details = await fetch(entry.url).then(
+      (response) => response.json(), // Abfrage, und Wandlung der Antwort in ein JSON-Objekt
     );
-    // Wir führen einen HTTP-Request an die URL des jeweiligen Pokémon (entry.url) aus.
-    // fetch(...) gibt ein Promise zurück; durch "await" pausiert die Ausführung, bis das Promise erfüllt ist.
-    // .then((response) => response.json()) wandelt die Antwort in ein JSON-Objekt um; "details" enthält dann das volle Pokémon-Objekt vom /pokemon/{id}-Endpoint.
 
     pokedexData[i] = {
       // Hier ersetzen wir das ursprüngliche Element im Array durch ein minimales Snapshot-Objekt,
       // das nur die für die List-Ansicht benötigten Felder enthält (kleiner Speicherbedarf).
 
-      id: details.id,
-      // Die numerische ID des Pokémon aus dem details-Objekt; praktisch für Anzeige und eindeutige IDs.
-
+      id: details.id, // Die numerische ID des Pokémon aus dem details-Objekt! Achtung, nicht der Array-Index i.
       name: entry.name,
-      // Wir übernehmen den Namen aus dem ursprünglichen Eintrag (entry.name).
-      // Das ist gleichbedeutend mit details.name, aber so bleibt die Absicht klar: Name stammt aus der ursprünglichen Liste.
-
-      sprite: details.sprites.front_default,
-      // URL zum Front-Sprite (kleines, zuverlässiges PNG). Für List-Views ist front_default meist vorhanden und ausreichend.
-      // Wir speichern nur diese URL, nicht das gesamte sprites-Objekt, um Platz zu sparen.
-
-      abilities: details.abilities.map((a) => a.ability.name),
-      // abilities ist ein Array von Strings: wir wandeln das details.abilities-Array in ein einfaches Array mit den Fähigkeits-Namen um.
-      // details.abilities hat die Form [{ability: { name, url }, is_hidden, slot}, ...]; wir extrahieren nur ability.name.
+      sprite: details.sprites.front_default, // Das Standard-Sprite-Bild des Pokémon
+      abilities: details.abilities.map((a) => a.ability.name), // Die Namen der Fähigkeiten als Array von Strings
     };
-    // Nach dieser Zuweisung enthält pokedexData[i] nur noch die minimalen Felder {id, name, sprite, abilities},
-    // geeignet für ein schnelles Rendering in der List-Ansicht und für platzsparendes localStorage.
   }
 }
-
-
 
 //Staus --> Spinner wird gezeigt / Daten sind geladen und in der Variable und auch im lokalen Speicher
 
