@@ -3,13 +3,12 @@ const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0";
 let currentPokemonIndex = 0;
 
 async function onloadInit() {
+
   showLoadingSpinner(true); // Ladeanzeige zeigen
   await loadLocalData(); // Initiale Daten laden
   showLoadingSpinner(false); // Ladeanzeige verbergen
   renderPokedexListView(); // Pokédex-Liste rendern
 }
-
-
 
 //laden initialer Daten aus der API in den lokalen Speicher und in die Variable pokedexData
 async function loadLocalData() {
@@ -25,8 +24,7 @@ async function loadLocalData() {
   // localStorage.setItem("pokedexData", JSON.stringify(data)); // Daten im lokalen Speicher speichern
 }
 
-//Pokémon-Details von der API holen
-
+//Pokémon-Details von der API holen für das erste Laden
 async function loadPokemonDetails() {
   for (let i = 0; i < pokedexData.length; i++) {
     const entry = pokedexData[i];
@@ -46,6 +44,45 @@ async function loadPokemonDetails() {
   }
 }
 
+/** 
+idee: die BASE_URL mit Parametern für limit und offset dynamisch, je nach größe des 
+aktuellen pokedexData Arrays anpassen
+somit würde das laden weiterer Pokémon vereinfacht werden, da die gleichen Funktionen genutzt werden können
+*/
+
+async function loadMorePokemon() {
+  offset = pokedexData.length;
+  limit = 5;
+  let fetchMoreUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+  showLoadingSpinner(true);
+  const responseNewPokemon = await fetch(fetchMoreUrl); //nur Name und URL der Pokémon holen
+  const dataNewPokemon = await responseNewPokemon.json();
+  const newPokemonEntries = dataNewPokemon.results;
+
+  await loadMorePokemonDetails(newPokemonEntries);
+  showLoadingSpinner(false);
+  renderPokedexListView();
+}
+
+
+
+async function loadMorePokemonDetails(newPokemonEntries) {
+    //für jedes neue Pokémon die Details holen und in das Array einfügen
+  for (let i = 0; i < newPokemonEntries.length; i++) {
+    const entry = newPokemonEntries[i];
+    const details = await fetch(entry.url).then((response) => response.json());
+
+    pokedexData.push({
+      // Hier fügen wir ein neues Objekt in das pokedexData-Array ein, durch push wird das Array erweitert
+      id: details.id,
+      name: entry.name,
+      sprite: details.sprites.front_default,
+      abilities: details.abilities.map((a) => a.ability.name),
+    });
+  }
+  console.log("Neue Pokémon mit Details geladen:");
+  console.table(pokedexData);
+}
 //Staus --> Spinner wird gezeigt / Daten sind geladen und in der Variable und auch im lokalen Speicher
 
 //Ladeanzeige anzeigen/verbergen
@@ -82,40 +119,3 @@ function nextPokemon() {
   openPokemonModal(currentPokemonIndex);
 }
 
-//mehr Pokémon laden und speichern und in die Liste einfügen
-async function loadMorePokemon() {
-  //URL zu Laufzeit mit Offset anpassen und 10 Pokemon fest hinzu
-  const URL_AFTERLOAD = `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${pokedexData.length}`;
-  showLoadingSpinner(true);
-  let response = await fetch(URL_AFTERLOAD);
-  let data = await response.json();
-  let newPokemon = data.results;
-  // Füge die neuen Pokémon zur Liste hinzu
-  for (let i = 0; i < newPokemon.length; i++) {
-    let pokemon = newPokemon[i];
-    let details = await fetch(pokemon.url).then((response) => response.json());
-    pokedexData.push({ ...pokemon, details });
-  }
-  /**
-   * nach einem nachladen sind die Daten in dem Array teilweise mit Details, teilweise ohne Details
-   * -->ggf. erst vor einem Modal "überhaupt" die Details laden
-   */
-
-  // Aktualisiere pokedexData im lokalen Speicher
-  //localStorage.setItem("pokedexData", JSON.stringify(pokedexData));
-  //localStorage nur mit den nötigen Daten füllen, da er nach dem Update überläuft :-(
-  // erst entfernen, dann einmalig schreiben (statt in Schleife)
-  // localStorage.removeItem("pokedexData");
-  // const snapshot = pokedexData.map((pokemon) => ({
-  //   id: pokemon.details.id,
-  //   name: pokemon.name,
-  //   types: pokemon.details.types.map((typeEntry) => typeEntry.type.name),
-  //   sprite: pokemon.details.sprites.front_default,
-  //   height: pokemon.details.height,
-  //   weight: pokemon.details.weight,
-  // }));
-  // localStorage.setItem("pokedexData", JSON.stringify(snapshot));
-
-  showLoadingSpinner(false);
-  renderPokedexListView();
-}
