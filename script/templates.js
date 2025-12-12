@@ -27,7 +27,7 @@ function renderPokedexListView() {
         class="pokedex-item"
         id="pokemon-${p.id}"
         data-index="${i}"
-        onclick="openPokemonModal(${i})"
+        onclick="loadPokemonModalExtraDetails(${i})"
       >
         <img class="pokemon-img" src="${p.sprite}" alt="${p.name}" />
         <h3 class="pokemon-title">#${p.id} ${p.name}</h3>
@@ -42,7 +42,7 @@ function renderPokedexListView() {
 }
 
 //Öffnen des Modals mit Pokémon-Details
-function openPokemonModal(index) {
+function openPokemonModal(index, types, height, weight) {
   const p = pokedexData[index];
   currentPokemonIndex = index;
   document.getElementById("modal-container").innerHTML = /* html */ `
@@ -61,6 +61,11 @@ function openPokemonModal(index) {
           ${p.abilities
             .map((a) => `<span class="type-badge">${a}</span>`)
             .join("")}
+        </div>
+        <div class="modal-pokemon-details">
+          <p><strong>Types:</strong> ${types}</p>
+          <p><strong>Height:</strong> ${height} m</p>
+          <p><strong>Weight:</strong> ${weight} kg</p>
         </div>
         <div class="modal-button">
           <div>

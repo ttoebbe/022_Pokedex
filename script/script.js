@@ -3,7 +3,6 @@ const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=20&offset=0";
 let currentPokemonIndex = 0;
 
 async function onloadInit() {
-
   showLoadingSpinner(true); // Ladeanzeige zeigen
   await loadLocalData(); // Initiale Daten laden
   showLoadingSpinner(false); // Ladeanzeige verbergen
@@ -64,10 +63,8 @@ async function loadMorePokemon() {
   renderPokedexListView();
 }
 
-
-
 async function loadMorePokemonDetails(newPokemonEntries) {
-    //für jedes neue Pokémon die Details holen und in das Array einfügen
+  //für jedes neue Pokémon die Details holen und in das Array einfügen
   for (let i = 0; i < newPokemonEntries.length; i++) {
     const entry = newPokemonEntries[i];
     const details = await fetch(entry.url).then((response) => response.json());
@@ -107,7 +104,7 @@ function previousPokemon() {
   if (currentPokemonIndex < 0) {
     currentPokemonIndex = pokedexData.length - 1;
   }
-  openPokemonModal(currentPokemonIndex);
+  loadPokemonModalExtraDetails(currentPokemonIndex);
 }
 
 //Modale Navigation zum nächsten Pokémon
@@ -116,6 +113,23 @@ function nextPokemon() {
   if (currentPokemonIndex >= pokedexData.length) {
     currentPokemonIndex = 0;
   }
-  openPokemonModal(currentPokemonIndex);
+  loadPokemonModalExtraDetails(currentPokemonIndex);
 }
 
+// Beim Modalaufruf sollen direkt mehr Details des Pokémons
+// angezeigt werden, welche aktuell für das Modal geladen werden, aber
+// nicht gespeichert werden
+async function loadPokemonModalExtraDetails(currentPokemonIndex) {
+
+let fetchDetailsUrl =`https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
+  //const entry = pokedexData[currentPokemonIndex];
+  const details = await fetch(fetchDetailsUrl).then(
+    (response) => response.json(), // Abfrage, und Wandlung der Antwort in ein JSON-Objekt
+  );
+
+  const types = details.types.map((t) => t.type.name).join(", ");
+  const height = details.height / 10; // Dezimeter -> Meter
+  const weight = details.weight / 10; // Hektogramm -> kg
+
+  openPokemonModal(currentPokemonIndex, types, height, weight);
+}
