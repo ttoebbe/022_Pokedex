@@ -11,11 +11,14 @@ async function onloadInit() {
 
 //laden initialer Daten aus der API in den lokalen Speicher und in die Variable pokedexData
 async function loadLocalData() {
-  const response = await fetch(BASE_URL);
+  const response = await fetch(BASE_URL); //nur Name und URL der Pokémon holen
   const data = await response.json();
 
   pokedexData = data.results; // Daten in die Variable laden
-  await loadPokemonDetails();
+  console.log("Pokémon ohne Details...");
+  console.table(pokedexData);
+
+  await loadPokemonDetails(); //ID (nicht ArrayID), Sprite (Bild) und Fähigkeiten der Pokémon holen
   console.table(pokedexData);
   // localStorage.setItem("pokedexData", JSON.stringify(data)); // Daten im lokalen Speicher speichern
 }
@@ -23,12 +26,10 @@ async function loadLocalData() {
 //Pokémon-Details von der API holen
 
 async function loadPokemonDetails() {
-  // "async" kennzeichnet die Funktion als asynchron, sodass wir innerhalb await verwenden können;
-  // das erlaubt uns, auf asynchrone Operationen (hier: fetch) zu warten, ohne Callbacks zu verschachteln.
+
 
   for (let i = 0; i < pokedexData.length; i++) {
-    // klassische for-Schleife: wir iterieren indexbasiert über das Array "pokedexData".
-    // Vorteil: einfache Kontrolle des Indexes, späteres Überschreiben des gleichen Slots möglich.
+.
 
     const entry = pokedexData[i];
     // Wir lesen das aktuelle Element aus dem Array in die Konstante "entry".
@@ -66,13 +67,7 @@ async function loadPokemonDetails() {
   }
 }
 
-// async function loadPokemonDetails() {
-//   for (let i = 0; i < pokedexData.length; i++) {
-//     let pokemon = pokedexData[i];
-//     let details = await fetch(pokemon.url).then((response) => response.json()); // Holen der Details und Umwandeln in JSON
-//     pokedexData[i] = { ...pokemon, details };
-//   }
-// }
+
 
 //Staus --> Spinner wird gezeigt / Daten sind geladen und in der Variable und auch im lokalen Speicher
 
@@ -124,6 +119,10 @@ async function loadMorePokemon() {
     let details = await fetch(pokemon.url).then((response) => response.json());
     pokedexData.push({ ...pokemon, details });
   }
+  /**
+   * nach einem nachladen sind die Daten in dem Array teilweise mit Details, teilweise ohne Details
+   * -->ggf. erst vor einem Modal "überhaupt" die Details laden
+   */
 
   // Aktualisiere pokedexData im lokalen Speicher
   //localStorage.setItem("pokedexData", JSON.stringify(pokedexData));
