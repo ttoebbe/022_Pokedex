@@ -142,3 +142,36 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
 
   openPokemonModal(currentPokemonIndex, types, height, weight);
 }
+
+//Suchfunktion für Pokémon im Pokédex
+//bei der Eingabe im Suchfeld wird diese Funktion aufgerufen.
+//Es wird die pokedexData durchsucht und nur die passenden Pokémon als ListView angezeigt.
+function searchPokemon() {
+  const searchInput = document.getElementById("search-bar").value.toLowerCase(); // Suchbegriff in Kleinbuchstaben
+  const listContainer = document.getElementById("pokedex-container"); // Container für die Pokédex-Liste
+  let html = ""; 
+
+  for (let i = 0; i < pokedexData.length; i++) {
+    const p = pokedexData[i];
+    // Überprüfen, ob der Name oder die ID des Pokémon den Suchbegriff enthält
+    if (p.name.toLowerCase().includes(searchInput)) {
+      html += /* html */ `
+        <article
+          class="pokedex-item"
+          id="pokemon-${p.id}"
+          data-index="${i}"
+          onclick="loadPokemonModalExtraDetails(${i})"
+          style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
+        >
+          <img class="pokemon-img" src="${p.sprite}" alt="${p.name}" />
+          <h3 class="pokemon-title">#${p.id} ${p.name}</h3>
+          <div class="pokemon-types">
+            ${p.abilities
+              .map((a) => `<span class="type-badge">${a}</span>`)
+              .join("")}
+          </div>
+        </article>`;
+    }
+  }
+  listContainer.innerHTML = html;
+}
