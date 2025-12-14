@@ -60,7 +60,7 @@ somit würde das laden weiterer Pokémon vereinfacht werden, da die gleichen Fun
 
 async function loadMorePokemon() {
   offset = pokedexData.length;
-  limit = 5;
+  limit = 15;
   let fetchMoreUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
   showLoadingSpinner(true);
   const responseNewPokemon = await fetch(fetchMoreUrl); //nur Name und URL der Pokémon holen
@@ -146,8 +146,16 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
 //Suchfunktion für Pokémon im Pokédex
 //bei der Eingabe im Suchfeld wird diese Funktion aufgerufen.
 //Es wird die pokedexData durchsucht und nur die passenden Pokémon als ListView angezeigt.
+// im wesentlichen wird die renderPokedexListView Funktion angepasst, um nur die passenden Pokémon anzuzeigen.
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase(); // Suchbegriff in Kleinbuchstaben
+  
+  if (searchInput.length < 3) {
+    //return // Abbrechen, wenn der Suchbegriff weniger als 3 Zeichen hat
+    renderPokedexListView(); // Alle Pokémon anzeigen, wenn Suchbegriff zu kurz ist
+    return;
+  }
+  
   const listContainer = document.getElementById("pokedex-container"); // Container für die Pokédex-Liste
   let html = ""; 
 
