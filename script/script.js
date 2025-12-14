@@ -39,8 +39,17 @@ async function loadPokemonDetails() {
       name: entry.name,
       sprite: details.sprites.front_default, // Das Standard-Sprite-Bild des Pokémon
       abilities: details.abilities.map((a) => a.ability.name), // Die Namen der Fähigkeiten als Array von Strings
+      color: await getPokemonColor(details.id), // Hintergrundfarbe des Pokémons holen
     };
   }
+}
+
+//Im Listview soll die Baggroundcolor der Karte je nach Typ des Pokémons angepasst werden.
+async function getPokemonColor(pokemonId) {
+  let colorUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
+  const response = await fetch(colorUrl);
+  const data = await response.json();
+  return data.color.name; // Rückgabe der Farbe als String
 }
 
 /** 
@@ -75,6 +84,7 @@ async function loadMorePokemonDetails(newPokemonEntries) {
       name: entry.name,
       sprite: details.sprites.front_default,
       abilities: details.abilities.map((a) => a.ability.name),
+      color: await getPokemonColor(details.id), // Hintergrundfarbe des Pokémons holen
     });
   }
   console.log("Neue Pokémon mit Details geladen:");
@@ -120,8 +130,7 @@ function nextPokemon() {
 // angezeigt werden, welche aktuell für das Modal geladen werden, aber
 // nicht gespeichert werden
 async function loadPokemonModalExtraDetails(currentPokemonIndex) {
-
-let fetchDetailsUrl =`https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
+  let fetchDetailsUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
   //const entry = pokedexData[currentPokemonIndex];
   const details = await fetch(fetchDetailsUrl).then(
     (response) => response.json(), // Abfrage, und Wandlung der Antwort in ein JSON-Objekt

@@ -28,6 +28,7 @@ function renderPokedexListView() {
         id="pokemon-${p.id}"
         data-index="${i}"
         onclick="loadPokemonModalExtraDetails(${i})"
+        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
       >
         <img class="pokemon-img" src="${p.sprite}" alt="${p.name}" />
         <h3 class="pokemon-title">#${p.id} ${p.name}</h3>
@@ -54,6 +55,7 @@ function openPokemonModal(index, types, height, weight) {
         class="pokemon-modal-card"
         id="pokemon-modal-${p.id}"
         onclick="event.stopPropagation()"
+        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
       >
         <img class="modal-pokemon-img" src="${p.sprite}" alt="${p.name}" />
         <h2 class="modal-pokemon-title">#${p.id} ${p.name}</h2>
