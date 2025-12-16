@@ -130,7 +130,7 @@ function nextPokemon() {
 // angezeigt werden, welche aktuell für das Modal geladen werden, aber
 // nicht gespeichert werden
 async function loadPokemonModalExtraDetails(currentPokemonIndex) {
-  let fetchDetailsUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
+  let fetchDetailsUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;  //plus 1, da die API IDs ab 1 zählt
   //const entry = pokedexData[currentPokemonIndex];
   const details = await fetch(fetchDetailsUrl).then(
     (response) => response.json(), // Abfrage, und Wandlung der Antwort in ein JSON-Objekt
@@ -143,11 +143,37 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   openPokemonModal(currentPokemonIndex, types, height, weight);
 }
 
+
+//Umschalten der Suchmethode zwischen includes und find
+let useFilterMethod = false;
+function toggleSearchMethod() {
+  useFilterMethod = !useFilterMethod;
+  const button = document.getElementById("search-switch-include-filter");
+  if (useFilterMethod) {
+    button.textContent = "Using Filter Method";
+  } else {
+    button.textContent = "Using Includes Method";
+  }
+}
+// Suchfunktion, die je nach ausgewählter Methode entweder includes oder find verwendet
+function searchPokemon() {
+  if (useFilterMethod) {
+    searchPokemonWithFilter();
+  } else {
+    searchPokemonWithIncludes();
+  }
+}
+
+
+
+
+
 //Suchfunktion für Pokémon im Pokédex
 //bei der Eingabe im Suchfeld wird diese Funktion aufgerufen.
 //Es wird die pokedexData durchsucht und nur die passenden Pokémon als ListView angezeigt.
 // im wesentlichen wird die renderPokedexListView Funktion angepasst, um nur die passenden Pokémon anzuzeigen.
-function searchPokemon() {
+// oninput funktioniert wie onchange, aber schon während der Eingabe, nicht erst danach.
+function searchPokemonWithIncludes() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase(); // Suchbegriff in Kleinbuchstaben
   
   if (searchInput.length < 3) {
@@ -183,3 +209,127 @@ function searchPokemon() {
   }
   listContainer.innerHTML = html;
 }
+
+
+
+// Suchfunktion für Pokémon im Pokédex mit find-Methode.
+// bei der Eingaben von 3 lettern soll sich ein Dropdown mit den passenden Pokémon öffnen.
+//erst beim klick auf ein Pokemon soll das Modal mit den Details geöffnet werden.
+function searchPokemonWithFilter() {
+  const searchInput = document.getElementById("search-bar").value.toLowerCase(); // Suchbegriff in Kleinbuchstaben
+  
+  if (searchInput.length < 3) {
+    renderPokedexListView(); // Alle Pokémon anzeigen, wenn Suchbegriff zu kurz ist
+    return;
+  }
+
+  const listContainer = document.getElementById("pokedex-container"); // Container für die Pokédex-Liste
+  let html = "";
+
+  const matches = pokedexData.filter((p) => //filtzern des Arrays nach passenden Pokémon
+    p.name.toLowerCase().includes(searchInput)  //Filtern geht in einem String nicht mit 
+    // filter, daher hier includes nutzen
+  );
+  console.table("Gefundene Pokémon:", matches);
+
+  //Anzeige der gefundenen Pokémon könnte nun in einem Dropdown erfolgen.
+  //oder wir zeigen direkt die passenden Pokémon in der Liste an, wie bei der anderen Suchmethode auch.
+
+
+  for (let i = 0; i < matches.length; i++) {
+    const p = matches[i];
+      html += /* html */ `
+        <article
+          class="pokedex-item"
+          id="pokemon-${p.id}"
+          data-index="${i}"
+          onclick="loadPokemonModalExtraDetails(${i})"
+          style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
+        > 
+          <img class="pokemon-img" src="${p.sprite}" alt="${p.name}" />
+          <h3 class="pokemon-title">#${p.id} ${p.name}</h3>
+          <div class="pokemon-types">
+            ${p.abilities
+              .map((a) => `<span class="type-badge">${a}</span>`)
+              .join("")}
+          </div>
+        </article>`;
+    }
+  
+  listContainer.innerHTML = html; 
+}
+
+
+
+
+
+
+
+
+
+//Achtung, nur zum abschauen und verstehen von Objekten in JS
+
+let myObject = {
+  name: "Flo",
+  age: 28,
+  logJob: function (number) {
+    console.log("Dev-Mentor " + number);
+  },
+  good_guy: true,
+};
+
+// console.log(myObject);
+// console.log(myObject.name);
+// //console.log(myObject.job.company);
+// console.log(myObject["name"]);
+// let objKey = "age";
+// console.log(myObject[objKey]);
+console.table(myObject);
+//Methoden aufrufen
+// myObject.logJob(651);
+
+//Keys und Entries / hier machen wir aus einem Object ein Array
+// console.log(Object.keys(myObject));
+// console.table(Object.keys(myObject));
+
+// console.log(Object.entries(myObject));
+// console.table(Object.entries(myObject));
+
+let objKeys = Object.keys(myObject);
+let ourArray = [];
+
+for (let i = 0; i < objKeys.length; i++) {
+  const element = objKeys[i];
+  ourArray.push(myObject[objKeys[i]]);
+}
+console.table(ourArray);
+
+//Info Json vs. normales Object
+//Json immer mit doppelten Anführungszeichen
+let myJson = '{ "name": "Flo", "age": 28, "good_guy": true }';
+console.log(myJson);
+console.log(typeof myJson); //string
+
+
+//Filtern in einem Array von Objects
+let users = [
+  { name: "Flo", age: 28, good_guy: true },
+  { name: "Max", age: 32, good_guy: false },
+  { name: "Lisa", age: 25, good_guy: true },
+];
+
+//Filter für gute Jungs
+let goodGuys = users.filter(function (user) {
+  return user.good_guy;
+});
+console.table(goodGuys);
+
+//Filter für schlechte Jungs
+let badGuys = users.filter(function (user) {
+  return !user.good_guy;
+});
+console.table(badGuys);
+
+console.log(users.filter((user) => user.age < 30));
+console.log(users.filter((user) => user.name === "Max"));
+
