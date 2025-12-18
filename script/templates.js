@@ -1,4 +1,4 @@
-//HTML für den Lade-Spinner (Bootstrap)
+//HTML für den Lade-Spinner
 function loadingSpinnerHTML() {
   return /* html */ `
     <div
@@ -20,21 +20,21 @@ function loadingSpinnerHTML() {
 function renderPokedexListView() {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
-  for (let i = 0; i < pokedexData.length; i++) {
-    const p = pokedexData[i];
+  for (let index = 0; index < pokedexData.length; index++) {
+    const pokemon = pokedexData[index];
     html += /* html */ `
       <article
         class="pokedex-item"
-        id="pokemon-${p.id}"
-        data-index="${i}"
-        onclick="loadPokemonModalExtraDetails(${i})"
-        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
+        id="pokemon-${pokemon.id}"
+        data-index="${index}"
+        onclick="loadPokemonModalExtraDetails(${index})"
+        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${pokemon.color};"
       >
-        <img class="pokemon-img" src="${p.sprite}" alt="${p.name}" />
-        <h3 class="pokemon-title">#${p.id} ${p.name}</h3>
+        <img class="pokemon-img" src="${pokemon.sprite}" alt="${pokemon.name}" />
+        <h3 class="pokemon-title">#${pokemon.id} ${pokemon.name}</h3>
         <div class="pokemon-types">
-          ${p.abilities
-            .map((a) => `<span class="type-badge">${a}</span>`)
+          ${pokemon.abilities
+            .map((ability) => `<span class="type-badge">${ability}</span>`)
             .join("")}
         </div>
       </article>`;
@@ -44,7 +44,7 @@ function renderPokedexListView() {
 
 //Öffnen des Modals mit Pokémon-Details
 function openPokemonModal(index, types, height, weight) {
-  const p = pokedexData[index];
+  const pokemon = pokedexData[index];
   currentPokemonIndex = index;
   document.getElementById("modal-container").innerHTML = /* html */ `
     <div
@@ -53,15 +53,15 @@ function openPokemonModal(index, types, height, weight) {
     >
       <div
         class="pokemon-modal-card"
-        id="pokemon-modal-${p.id}"
+        id="pokemon-modal-${pokemon.id}"
         onclick="event.stopPropagation()"
-        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${p.color};"
+        style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${pokemon.color};"
       >
-        <img class="modal-pokemon-img" src="${p.sprite}" alt="${p.name}" />
-        <h2 class="modal-pokemon-title">#${p.id} ${p.name}</h2>
+        <img class="modal-pokemon-img" src="${pokemon.sprite}" alt="${pokemon.name}" />
+        <h2 class="modal-pokemon-title">#${pokemon.id} ${pokemon.name}</h2>
         <div class="pokemon-types">
-          ${p.abilities
-            .map((a) => `<span class="type-badge">${a}</span>`)
+          ${pokemon.abilities
+            .map((ability) => `<span class="type-badge">${ability}</span>`)
             .join("")}
         </div>
         <div class="modal-pokemon-details">
@@ -91,3 +91,38 @@ function openPokemonModal(index, types, height, weight) {
     </div>
   `;
 }
+
+// Suchfunktion für Pokémon im Pokédex.
+function searchPokemon() {
+  const searchInput = document.getElementById("search-bar").value.toLowerCase();
+  if (searchInput.length < 3) {
+    renderPokedexListView();
+    return;
+  }
+  const listContainer = document.getElementById("pokedex-container");
+  let html = "";
+
+  for (let index = 0; index < pokedexData.length; index++) {
+    const pokemon = pokedexData[index];
+    if (pokemon.name.toLowerCase().includes(searchInput)) {
+      html += /* html */ `
+        <article
+          class="pokedex-item"
+          id="pokemon-${pokemon.id}"
+          data-index="${index}"
+          onclick="loadPokemonModalExtraDetails(${index})"
+          style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${pokemon.color};"
+        >
+          <img class="pokemon-img" src="${pokemon.sprite}" alt="${pokemon.name}" />
+          <h3 class="pokemon-title">#${pokemon.id} ${pokemon.name}</h3>
+          <div class="pokemon-types">
+            ${pokemon.abilities
+              .map((ability) => `<span class="type-badge">${ability}</span>`)
+              .join("")}
+          </div>
+        </article>`;
+    }
+  }
+  listContainer.innerHTML = html;
+}
+
