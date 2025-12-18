@@ -116,3 +116,50 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   openPokemonModal(currentPokemonIndex, types, height, weight);
 }
 
+// Initiale Anzeige der Pokédex-Liste
+function renderPokedexListView() {
+  const listContainer = document.getElementById("pokedex-container");
+  let html = "";
+  for (let index = 0; index < pokedexData.length; index++) {
+    html += renderPokemonItem(pokedexData[index], index);
+  }
+  listContainer.innerHTML = html;
+}
+
+// Öffnen des Modals mit Pokémon-Details
+function openPokemonModal(index, types, height, weight) {
+  const pokemon = pokedexData[index];
+  currentPokemonIndex = index;
+  document.getElementById("modal-container").innerHTML = renderPokemonModal(
+    pokemon,
+    types,
+    height,
+    weight,
+  );
+}
+
+// Hilfsfunktion zum Rendern der Fähigkeits-Badges
+function renderAbilitiesBadges(abilities) {
+  let html = "";
+  for (let i = 0; i < abilities.length; i++) {
+    html += `<span class="type-badge">${abilities[i]}</span>`;
+  }
+  return html;
+}
+
+// Suchfunktion für Pokémon im Pokédex
+function searchPokemon() {
+  const searchInput = document.getElementById("search-bar").value.toLowerCase();
+  if (searchInput.length < 3) {
+    renderPokedexListView();
+    return;
+  }
+  const listContainer = document.getElementById("pokedex-container");
+  let html = "";
+  for (let index = 0; index < pokedexData.length; index++) {
+    if (pokedexData[index].name.toLowerCase().includes(searchInput)) {
+      html += renderPokemonItem(pokedexData[index], index);
+    }
+  }
+  listContainer.innerHTML = html;
+}
