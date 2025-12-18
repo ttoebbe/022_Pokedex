@@ -186,7 +186,7 @@ function searchPokemon() {
     }
   }
   if (html.length == 0) {
-    html = "<p>No Pokémon found.</p>";
+    html = "<p>No Pokemon found.</p>";
   }
   listContainer.innerHTML = html;
 }
