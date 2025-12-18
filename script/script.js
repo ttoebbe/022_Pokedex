@@ -119,7 +119,13 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const height = details.height / 10;
   const weight = details.weight / 10;
   const hpAttackDefense = extractPokemonStats(details);
-  openPokemonModal(currentPokemonIndex, abilities, height, weight, hpAttackDefense);
+  openPokemonModal(
+    currentPokemonIndex,
+    abilities,
+    height,
+    weight,
+    hpAttackDefense,
+  );
 }
 
 //hp, attack und defense extrahieren, da diese nun auch mit auf das Modal sollen
@@ -194,13 +200,30 @@ function extractPokemonAbilities(details) {
   return abilities.join(", ");
 }
 
-// Suchfunktion für Pokémon im Pokédex
+// Suchfunktion für Pokémon im Pokedex
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase();
+  toggleClearButton(searchInput);
+
   if (searchInput.length < 3) {
     renderPokedexListView();
     return;
   }
+  renderFilteredPokemon(searchInput);
+}
+
+// Clear-Button anzeigen/verstecken
+function toggleClearButton(searchInput) {
+  const clearBtn = document.getElementById("clear-search-btn");
+  if (searchInput.length > 0) {
+    clearBtn.classList.remove("d-none");
+  } else {
+    clearBtn.classList.add("d-none");
+  }
+}
+
+// Gefilterte Pokemon-Liste rendern
+function renderFilteredPokemon(searchInput) {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
   for (let index = 0; index < pokedexData.length; index++) {
@@ -208,8 +231,15 @@ function searchPokemon() {
       html += renderPokemonItem(pokedexData[index], index);
     }
   }
-  if (html.length == 0) {
+  if (html.length === 0) {
     html = "<p>No Pokemon found.</p>";
   }
   listContainer.innerHTML = html;
+}
+
+// Suchfeld leeren
+function clearSearch() {
+  document.getElementById("search-bar").value = "";
+  document.getElementById("clear-search-btn").classList.add("d-none");
+  renderPokedexListView();
 }

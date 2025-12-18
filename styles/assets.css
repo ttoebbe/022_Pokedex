@@ -1,15 +1,14 @@
 /* header */
-.search-area {
-  position: fixed;
-  top: 90px;
-  right: 20px;
-  z-index: 11;
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 300px;
 }
 
 #search-bar {
   width: 100%;
-  max-width: 300px;
-  padding: 10px 20px;
+  padding: 10px 40px 10px 20px; /* Rechts Platz für Button */
   border: 2px solid #fff;
   border-radius: 25px;
   font-size: 1rem;
@@ -23,6 +22,33 @@
   border-color: #ffc107;
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
   transform: scale(1.02);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.clear-search-btn:hover {
+  color: #dc3545;
+}
+
+.clear-search-btn.d-none {
+  display: none;
 }
 
 /* Pokedex Container and Items */
@@ -210,6 +236,10 @@ body.modal-open {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  .search-wrapper {
+    max-width: 100%;
+  }
+
   #search-bar {
     max-width: 100%;
   }

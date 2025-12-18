@@ -38,16 +38,30 @@
     <header>
       <div class="header-content">
         <div class="header-left">
-          <img src="./assets/icons/favicon-pokedex.png" alt="Pokedex Logo" class="header-logo" />
+          <img
+            src="./assets/icons/favicon-pokedex.png"
+            alt="Pokedex Logo"
+            class="header-logo"
+          />
           <h1>Pokedex</h1>
         </div>
         <div class="header-right">
-          <input
-            type="text"
-            id="search-bar"
-            placeholder="Search Pokemon..."
-            oninput="searchPokemon()"
-          />
+          <div class="search-wrapper">
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Search Pokemon..."
+              oninput="searchPokemon()"
+            />
+            <button
+              id="clear-search-btn"
+              class="clear-search-btn d-none"
+              onclick="clearSearch()"
+              type="button"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       </div>
     </header>
