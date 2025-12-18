@@ -26,7 +26,7 @@ async function loadPokemonDetails() {
       id: details.id,
       name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
-      abilities: details.abilities.map((a) => a.ability.name),
+      types: details.types.map((typeObj) => typeObj.type.name),
       color: await getPokemonColor(details.id),
     };
   }
@@ -64,17 +64,7 @@ async function loadMorePokemonDetails(newPokemonEntries) {
       id: details.id,
       name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
-      abilities: details.abilities.map((abilityObj) => abilityObj.ability.name),
-      // Fähigkeiten-Namen extrahieren
-      // Vorher: [{ ability: { name: "overgrow" } }, { ability: { name: "chlorophyll" } }]
-      // Nachher: ["overgrow", "chlorophyll"]
-      // .map() transformiert jedes Element: nimm nur den 
-      // Namen aus der verschachtelten Struktur
-      // einen UNterschied zu einer normalen Schleife
-      // ist, dass .map() ein neues Array zurückgibt ohne
-      // das ursprüngliche zu verändern, was 
-      // eine for-Schleife tun würde.
-
+      types: details.types.map((typeObj) => typeObj.type.name),
       color: await getPokemonColor(details.id),
     });
   }
@@ -120,10 +110,10 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const details = await fetch(fetchDetailsUrl).then((response) =>
     response.json(),
   );
-  const types = extractPokemonTypes(details);
+  const abilities = extractPokemonAbilities(details);
   const height = details.height / 10;
   const weight = details.weight / 10;
-  openPokemonModal(currentPokemonIndex, types, height, weight);
+  openPokemonModal(currentPokemonIndex, abilities, height, weight);
 }
 
 // Extrahieren der Typen-Namen
@@ -146,24 +136,33 @@ function renderPokedexListView() {
 }
 
 // Öffnen des Modals mit Pokémon-Details
-function openPokemonModal(index, types, height, weight) {
+function openPokemonModal(index, abilities, height, weight) {
   const pokemon = pokedexData[index];
   currentPokemonIndex = index;
   document.getElementById("modal-container").innerHTML = renderPokemonModal(
     pokemon,
-    types,
+    abilities,
     height,
     weight,
   );
 }
 
-// Hilfsfunktion zum Rendern der Fähigkeits-Badges
-function renderAbilitiesBadges(abilities) {
+// Hilfsfunktion zum Rendern der Type-Badges
+function renderTypeBadges(types) {
   let html = "";
-  for (let i = 0; i < abilities.length; i++) {
-    html += `<span class="type-badge">${abilities[i]}</span>`;
+  for (let i = 0; i < types.length; i++) {
+    html += `<span class="type-badge"> ${types[i]}</span>`;
   }
   return html;
+}
+
+// Extrahieren der Ability-Namen
+function extractPokemonAbilities(details) {
+  let abilities = [];
+  for (let i = 0; i < details.abilities.length; i++) {
+    abilities.push(details.abilities[i].ability.name);
+  }
+  return abilities.join(", ");
 }
 
 // Suchfunktion für Pokémon im Pokédex
