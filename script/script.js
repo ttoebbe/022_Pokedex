@@ -24,7 +24,7 @@ async function loadPokemonDetails() {
     const details = await fetch(entry.url).then((response) => response.json());
     pokedexData[i] = {
       id: details.id,
-      name: entry.name,
+      name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
       abilities: details.abilities.map((a) => a.ability.name),
       color: await getPokemonColor(details.id),
@@ -62,7 +62,7 @@ async function loadMorePokemonDetails(newPokemonEntries) {
     const details = await fetch(entry.url).then((response) => response.json());
     pokedexData.push({
       id: details.id,
-      name: entry.name,
+      name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
       abilities: details.abilities.map((a) => a.ability.name),
       color: await getPokemonColor(details.id),
@@ -110,10 +110,19 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const details = await fetch(fetchDetailsUrl).then((response) =>
     response.json(),
   );
-  const types = details.types.map((t) => t.type.name).join(", ");
+  const types = extractPokemonTypes(details);
   const height = details.height / 10;
   const weight = details.weight / 10;
   openPokemonModal(currentPokemonIndex, types, height, weight);
+}
+
+// Extrahieren der Typen-Namen
+function extractPokemonTypes(details) {
+  let types = [];
+  for (let i = 0; i < details.types.length; i++) {
+    types.push(details.types[i].type.name);
+  }
+  return types.join(", ");
 }
 
 // Initiale Anzeige der Pokédex-Liste
