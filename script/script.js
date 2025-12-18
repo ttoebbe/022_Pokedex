@@ -57,14 +57,24 @@ async function loadMorePokemon() {
 
 //Mehr Pokémon-Details laden und an die bestehende Liste anhängen
 async function loadMorePokemonDetails(newPokemonEntries) {
-  for (let i = 0; i < newPokemonEntries.length; i++) {
-    const entry = newPokemonEntries[i];
+  for (let entryIndex = 0; entryIndex < newPokemonEntries.length; entryIndex++) {
+    const entry = newPokemonEntries[entryIndex];
     const details = await fetch(entry.url).then((response) => response.json());
     pokedexData.push({
       id: details.id,
       name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
-      abilities: details.abilities.map((a) => a.ability.name),
+      abilities: details.abilities.map((abilityObj) => abilityObj.ability.name),
+      // Fähigkeiten-Namen extrahieren
+      // Vorher: [{ ability: { name: "overgrow" } }, { ability: { name: "chlorophyll" } }]
+      // Nachher: ["overgrow", "chlorophyll"]
+      // .map() transformiert jedes Element: nimm nur den 
+      // Namen aus der verschachtelten Struktur
+      // einen UNterschied zu einer normalen Schleife
+      // ist, dass .map() ein neues Array zurückgibt ohne
+      // das ursprüngliche zu verändern, was 
+      // eine for-Schleife tun würde.
+
       color: await getPokemonColor(details.id),
     });
   }
