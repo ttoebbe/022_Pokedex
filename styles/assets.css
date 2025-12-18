@@ -1,16 +1,25 @@
 /* header */
-#search-bar {
-  position: absolute;
-  top: 10px;
+.search-area {
+  position: fixed;
+  top: 90px;
   right: 20px;
-  width: 100%;
-  max-width: 250px;
+  z-index: 11;
+}
+
+#search-bar {
+  width: 150px;
   padding: 10px 15px;
-  margin-top: 10px;
   border: 2px solid #ccc;
   border-radius: 25px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  background-color: white; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#search-bar:focus {
+  outline: none;
+  border-color: #ffc107;
 }
 
 /* Pokedex Container and Items */
@@ -19,6 +28,7 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   width: 100%;
+  margin-top: 20px; /* Reduzierter Abstand zum Header */
 }
 
 .pokedex-item {
