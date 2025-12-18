@@ -118,7 +118,29 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const abilities = extractPokemonAbilities(details);
   const height = details.height / 10;
   const weight = details.weight / 10;
-  openPokemonModal(currentPokemonIndex, abilities, height, weight);
+  const hpAttackDefense = extractPokemonStats(details);
+  openPokemonModal(currentPokemonIndex, abilities, height, weight, hpAttackDefense);
+}
+
+//hp, attack und defense extrahieren, da diese nun auch mit auf das Modal sollen
+function extractPokemonStats(details) {
+  let stats = {};
+  for (let indexStats = 0; indexStats < details.stats.length; indexStats++) {
+    const statName = details.stats[indexStats].stat.name;
+    const statValue = details.stats[indexStats].base_stat;
+    stats[statName] = statValue;
+    if (statName === "hp") {
+      stats["hp"] = statValue;
+    }
+    if (statName === "attack") {
+      stats["attack"] = statValue;
+    }
+    if (statName === "defense") {
+      stats["defense"] = statValue;
+    }
+  }
+  console.table(stats);
+  return stats;
 }
 
 // Extrahieren der Typen-Namen
@@ -141,7 +163,7 @@ function renderPokedexListView() {
 }
 
 // Öffnen des Modals mit Pokémon-Details
-function openPokemonModal(index, abilities, height, weight) {
+function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   const pokemon = pokedexData[index];
   currentPokemonIndex = index;
   document.getElementById("modal-container").innerHTML = renderPokemonModal(
@@ -149,6 +171,7 @@ function openPokemonModal(index, abilities, height, weight) {
     abilities,
     height,
     weight,
+    hpAttackDefense,
   );
   document.body.classList.add("modal-open");
 }

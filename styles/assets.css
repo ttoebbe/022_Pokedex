@@ -167,6 +167,26 @@ body.modal-open {
   margin-top: 20px;
 }
 
+.stat-container {
+  margin: 15px 0;
+  text-align: left;
+}
+
+.stat-container strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.progress {
+  height: 25px;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  font-weight: bold;
+  line-height: 25px;
+}
+
 /* Loading Spinner */
 .loading-overlay {
   position: fixed;
