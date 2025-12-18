@@ -175,6 +175,33 @@
   margin-top: 20px;
 }
 
+
+/* Loading Spinner Styles */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.loading-spinner {
+  width: 4rem;
+  height: 4rem;
+  border: 0.4rem solid #f8f9fa;
+  border-top-color: #ffc107;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+ /* Responsive Styles */
 @media (max-width: 768px) {
   #pokedex-container {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

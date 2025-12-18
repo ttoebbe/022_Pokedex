@@ -1,15 +1,8 @@
-//HTML für den Lade-Spinner
+// HTML für den Lade-Spinner
 function loadingSpinnerHTML() {
   return /* html */ `
-    <div
-      class="d-flex justify-content-center align-items-center"
-      style="min-height: 300px;"
-    >
-      <div
-        class="spinner-border text-warning"
-        role="status"
-        style="width: 4rem; height: 4rem;"
-      >
+    <div class="loading-spinner-container">
+      <div class="loading-spinner">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
