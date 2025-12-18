@@ -57,7 +57,11 @@ async function loadMorePokemon() {
 
 //Mehr Pokémon-Details laden und an die bestehende Liste anhängen
 async function loadMorePokemonDetails(newPokemonEntries) {
-  for (let entryIndex = 0; entryIndex < newPokemonEntries.length; entryIndex++) {
+  for (
+    let entryIndex = 0;
+    entryIndex < newPokemonEntries.length;
+    entryIndex++
+  ) {
     const entry = newPokemonEntries[entryIndex];
     const details = await fetch(entry.url).then((response) => response.json());
     pokedexData.push({
@@ -84,6 +88,7 @@ function showLoadingSpinner(isLoading) {
 function closePokemonModal() {
   const modalContainer = document.getElementById("modal-container");
   modalContainer.innerHTML = "";
+  document.body.classList.remove("modal-open");
 }
 
 //Modale Navigation zum vorherigen Pokémon
@@ -145,6 +150,7 @@ function openPokemonModal(index, abilities, height, weight) {
     height,
     weight,
   );
+  document.body.classList.add("modal-open");
 }
 
 // Hilfsfunktion zum Rendern der Type-Badges
