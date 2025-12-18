@@ -130,10 +130,10 @@ body.modal-open {
 
 .pokemon-modal-overlay {
   position: fixed;
-  top: 0;
+  top: 80px;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 80px);
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
@@ -144,8 +144,9 @@ body.modal-open {
 .pokemon-modal-card {
   background-color: #fff;
   border-radius: 20px;
-  padding: 40px;
+  padding: 0 30px 30px 30px;
   max-width: 500px;
+  max-height: 90%;
   text-align: center;
 }
 
@@ -168,18 +169,20 @@ body.modal-open {
 }
 
 .stat-container {
-  margin: 15px 0;
+  margin: 10px 0;
   text-align: left;
 }
 
 .stat-container strong {
   display: block;
+  width: 120px;
   margin-bottom: 5px;
 }
 
 .progress {
   height: 25px;
   margin-top: 5px;
+  max-width: 300px;
 }
 
 .progress-bar {

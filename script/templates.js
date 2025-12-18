@@ -57,10 +57,23 @@ function renderPokemonModal(
           <p><strong>Weight:</strong> ${weight} kg</p>
 
           <div class="stat-container">
-            <strong>HP:</strong> ${hpAttackDefense.hp}
+            <strong>HP:</strong>
             <div class="progress">
               <div
                 class="progress-bar bg-danger"
+                role="progressbar"
+                style="width: ${hpAttackDefense.hp}%"
+              >
+                ${hpAttackDefense.hp}
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-container">
+            <strong>Attack:</strong>
+            <div class="progress">
+              <div
+                class="progress-bar bg-warning"
                 role="progressbar"
                 style="width: ${hpAttackDefense.attack}%"
               >
@@ -68,28 +81,15 @@ function renderPokemonModal(
               </div>
             </div>
           </div>
-
           <div class="stat-container">
-            <strong>Attack:</strong> ${hpAttackDefense.attack}
-            <div class="progress">
-              <div
-                class="progress-bar bg-warning"
-                role="progressbar"
-                style="width: ${hpAttackDefense.defense}%"
-              >
-                ${hpAttackDefense.defense}
-              </div>
-            </div>
-          </div>
-          <div class="stat-container">
-            <strong>Defense:</strong> ${hpAttackDefense.defense}
+            <strong>Defense:</strong>
             <div class="progress">
               <div
                 class="progress-bar bg-success"
                 role="progressbar"
-                style="width: ${hpAttackDefense.hp}%"
+                style="width: ${hpAttackDefense.defense}%"
               >
-                ${hpAttackDefense.hp}
+                ${hpAttackDefense.defense}
               </div>
             </div>
           </div>
