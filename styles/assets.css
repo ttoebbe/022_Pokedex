@@ -140,7 +140,7 @@
 #more-pokemon-btn {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: max(20px, calc((100% - 1440px) / 2)); 
   z-index: 11;
   border-radius: 50px;
   padding: 12px 24px;
