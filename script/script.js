@@ -42,8 +42,8 @@ async function getPokemonColor(pokemonId) {
 
 // Load more Pokémon and append to the existing list
 async function loadMorePokemon() {
-  offset = pokedexData.length;
-  limit = 20;
+  const offset = pokedexData.length;
+  const limit = 20;
   let fetchMoreUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
   showLoadingSpinner(true);
   const responseNewPokemon = await fetch(fetchMoreUrl);
@@ -59,8 +59,7 @@ async function loadMorePokemon() {
 async function loadMorePokemonDetails(newPokemonEntries) {
   for (
     let entryIndex = 0;
-    entryIndex < newPokemonEntries.length;
-    entryIndex++
+    entryIndex < newPokemonEntries.length; entryIndex++
   ) {
     const entry = newPokemonEntries[entryIndex];
     const details = await fetch(entry.url).then((response) => response.json());
@@ -136,14 +135,11 @@ function extractPokemonStats(details) {
     const statValue = details.stats[indexStats].base_stat;
     stats[statName] = statValue;
     if (statName === "hp") {
-      stats["hp"] = statValue;
-    }
+      stats["hp"] = statValue;}
     if (statName === "attack") {
-      stats["attack"] = statValue;
-    }
+      stats["attack"] = statValue;}
     if (statName === "defense") {
-      stats["defense"] = statValue;
-    }
+      stats["defense"] = statValue;}
   }
   return stats;
 }
