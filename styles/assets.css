@@ -140,7 +140,7 @@
 #more-pokemon-btn {
   position: fixed;
   bottom: 20px;
-  right: max(20px, calc((100% - 1440px) / 2)); 
+  right: max(20px, calc((100% - 1440px) / 2));
   z-index: 11;
   border-radius: 50px;
   padding: 12px 24px;
@@ -168,15 +168,20 @@ body.modal-open {
 }
 
 .pokemon-modal-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  overflow-y: auto;
   background-color: #fff;
   border-radius: 20px;
   padding: 0 30px 30px 30px;
   max-width: 500px;
   max-height: 90%;
-  text-align: center;
 }
 
 .pokemon-modal-card img {
+  flex-shrink: 0;
+  object-fit: contain;
   width: 250px;
   height: 250px;
   margin-bottom: 20px;
@@ -270,10 +275,20 @@ body.modal-open {
   .pokemon-modal-card {
     padding: 20px;
     max-width: 90%;
+    max-height: 85%;
   }
 
   .pokemon-modal-card img {
     width: 150px;
     height: 150px;
+  }
+
+  .stat-container {
+    font-size: 0.9rem;
+  }
+
+  .progress {
+    height: 20px;
+    max-width: 100%;
   }
 }
