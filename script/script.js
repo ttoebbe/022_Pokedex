@@ -9,7 +9,7 @@ async function onloadInit() {
   renderPokedexListView();
 }
 
-//laden initialer Daten aus der API in den lokalen Speicher und in die Variable pokedexData
+// Load initial data from the API into local storage and into the pokedexData variable
 async function loadLocalData() {
   const response = await fetch(BASE_URL);
   const data = await response.json();
@@ -17,7 +17,7 @@ async function loadLocalData() {
   await loadPokemonDetails();
 }
 
-//Pokémon-Details von der API holen für das erste Laden
+// Fetch Pokémon details from the API for initial load
 async function loadPokemonDetails() {
   for (let i = 0; i < pokedexData.length; i++) {
     const entry = pokedexData[i];
@@ -32,7 +32,7 @@ async function loadPokemonDetails() {
   }
 }
 
-//Im Listview soll die Baggroundcolor der Karte je nach Typ des Pokémons angepasst werden.
+// In list view, the background color of the card should be adjusted according to the Pokémon's type
 async function getPokemonColor(pokemonId) {
   let colorUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
   const response = await fetch(colorUrl);
@@ -40,7 +40,7 @@ async function getPokemonColor(pokemonId) {
   return data.color.name;
 }
 
-//Mehr Pokémon laden und an die bestehende Liste anhängen
+// Load more Pokémon and append to the existing list
 async function loadMorePokemon() {
   offset = pokedexData.length;
   limit = 20;
@@ -55,7 +55,7 @@ async function loadMorePokemon() {
   renderPokedexListView();
 }
 
-//Mehr Pokémon-Details laden und an die bestehende Liste anhängen
+// Load more Pokémon details and append to the existing list
 async function loadMorePokemonDetails(newPokemonEntries) {
   for (
     let entryIndex = 0;
@@ -74,7 +74,7 @@ async function loadMorePokemonDetails(newPokemonEntries) {
   }
 }
 
-//Ladeanzeige anzeigen/verbergen
+// Show/hide loading indicator
 function showLoadingSpinner(isLoading) {
   let overlay = document.getElementById("loading-overlay");
   if (isLoading) {
@@ -84,14 +84,14 @@ function showLoadingSpinner(isLoading) {
   }
 }
 
-//Schließen des Pokémon-Modals
+// Close the Pokémon modal
 function closePokemonModal() {
   const modalContainer = document.getElementById("modal-container");
   modalContainer.innerHTML = "";
   document.body.classList.remove("modal-open");
 }
 
-//Modale Navigation zum vorherigen Pokémon
+// Modal navigation to previous Pokémon
 function previousPokemon() {
   currentPokemonIndex--;
   if (currentPokemonIndex < 0) {
@@ -100,7 +100,7 @@ function previousPokemon() {
   loadPokemonModalExtraDetails(currentPokemonIndex);
 }
 
-//Modale Navigation zum nächsten Pokémon
+// Modal navigation to next Pokémon
 function nextPokemon() {
   currentPokemonIndex++;
   if (currentPokemonIndex >= pokedexData.length) {
@@ -109,7 +109,7 @@ function nextPokemon() {
   loadPokemonModalExtraDetails(currentPokemonIndex);
 }
 
-// Laden zusätzlicher Details für das Pokémon-Modale
+// Load additional details for the Pokémon modal
 async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   let fetchDetailsUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
   const details = await fetch(fetchDetailsUrl).then((response) =>
@@ -128,7 +128,7 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   );
 }
 
-//hp, attack und defense extrahieren, da diese nun auch mit auf das Modal sollen
+// Extract hp, attack and defense, as these should now also be displayed on the modal
 function extractPokemonStats(details) {
   let stats = {};
   for (let indexStats = 0; indexStats < details.stats.length; indexStats++) {
@@ -149,7 +149,7 @@ function extractPokemonStats(details) {
   return stats;
 }
 
-// Extrahieren der Typen-Namen
+// Extract type names
 function extractPokemonTypes(details) {
   let types = [];
   for (let i = 0; i < details.types.length; i++) {
@@ -158,7 +158,7 @@ function extractPokemonTypes(details) {
   return types.join(", ");
 }
 
-// Initiale Anzeige der Pokédex-Liste
+// Initial display of the Pokédex list
 function renderPokedexListView() {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
@@ -168,7 +168,7 @@ function renderPokedexListView() {
   listContainer.innerHTML = html;
 }
 
-// Öffnen des Modals mit Pokémon-Details
+// Open the modal with Pokémon details
 function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   const pokemon = pokedexData[index];
   currentPokemonIndex = index;
@@ -182,7 +182,7 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   document.body.classList.add("modal-open");
 }
 
-// Hilfsfunktion zum Rendern der Type-Badges
+// Helper function to render type badges
 function renderTypeBadges(types) {
   let html = "";
   for (let i = 0; i < types.length; i++) {
@@ -191,7 +191,7 @@ function renderTypeBadges(types) {
   return html;
 }
 
-// Extrahieren der Ability-Namen
+// Extract ability names
 function extractPokemonAbilities(details) {
   let abilities = [];
   for (let i = 0; i < details.abilities.length; i++) {
@@ -200,7 +200,7 @@ function extractPokemonAbilities(details) {
   return abilities.join(", ");
 }
 
-// Suchfunktion für Pokémon im Pokedex
+// Search function for Pokémon in the Pokedex
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase();
   toggleClearButton(searchInput);
@@ -212,7 +212,7 @@ function searchPokemon() {
   renderFilteredPokemon(searchInput);
 }
 
-// Clear-Button anzeigen/verstecken
+// Show/hide clear button
 function toggleClearButton(searchInput) {
   const clearBtn = document.getElementById("clear-search-btn");
   if (searchInput.length > 0) {
@@ -222,7 +222,7 @@ function toggleClearButton(searchInput) {
   }
 }
 
-// Gefilterte Pokemon-Liste rendern
+// Render filtered Pokemon list
 function renderFilteredPokemon(searchInput) {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
@@ -237,7 +237,7 @@ function renderFilteredPokemon(searchInput) {
   listContainer.innerHTML = html;
 }
 
-// Suchfeld leeren
+// Clear search field
 function clearSearch() {
   document.getElementById("search-bar").value = "";
   document.getElementById("clear-search-btn").classList.add("d-none");

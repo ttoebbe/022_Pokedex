@@ -1,4 +1,4 @@
-// HTML für den Lade-Spinner
+// HTML for the loading spinner
 function loadingSpinnerHTML() {
   return /* html */ `
     <div class="loading-spinner-container">
@@ -9,7 +9,7 @@ function loadingSpinnerHTML() {
   `;
 }
 
-// HTML für ein einzelnes Pokémon-Item
+// HTML for a single Pokémon item
 function renderPokemonItem(pokemon, index) {
   return /* html */ `
     <article
@@ -25,7 +25,7 @@ function renderPokemonItem(pokemon, index) {
     </article>`;
 }
 
-// HTML für das Modal-Fenster
+// HTML for the modal window
 function renderPokemonModal(
   pokemon,
   abilities,

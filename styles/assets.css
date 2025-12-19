@@ -1,4 +1,4 @@
-/* header */
+/* Header */
 .search-wrapper {
   position: relative;
   display: inline-block;
@@ -8,7 +8,7 @@
 
 #search-bar {
   width: 100%;
-  padding: 10px 40px 10px 20px; /* Rechts Platz für Button */
+  padding: 10px 40px 10px 20px; /* Space on the right for button */
   border: 2px solid #fff;
   border-radius: 25px;
   font-size: 1rem;
