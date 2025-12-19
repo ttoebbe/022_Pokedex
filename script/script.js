@@ -145,7 +145,6 @@ function extractPokemonStats(details) {
       stats["defense"] = statValue;
     }
   }
-  console.table(stats);
   return stats;
 }
 
