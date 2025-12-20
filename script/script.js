@@ -1,6 +1,14 @@
 let pokedexData = [];
 
-const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=25&offset=0";
+const BASE_URL = "https://pokeapi.co/api/v2/";
+const LIMIT_URL = "pokemon?limit=";
+let limit = 7;
+const OFFSET_URL = "&offset=";
+let offset = 0;
+const COLOR_URL = "pokemon-species/";
+const EXTRA_DETAILS_URL = "pokemon/";
+
+// const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=25&offset=0";
 
 let currentPokemonIndex = 0;
 
@@ -13,7 +21,9 @@ async function onloadInit() {
 
 // Load initial data from the API into local storage and into the pokedexData variable
 async function loadLocalData() {
-  const response = await fetch(BASE_URL);
+  const response = await fetch(
+    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
+  );
   const data = await response.json();
   pokedexData = data.results;
   await loadPokemonDetails();
@@ -36,19 +46,18 @@ async function loadPokemonDetails() {
 
 // In list view, the background color of the card should be adjusted according to the Pokémon's type
 async function getPokemonColor(pokemonId) {
-  let colorUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
-  const response = await fetch(colorUrl);
+  const response = await fetch(BASE_URL + COLOR_URL + pokemonId + "/");
   const data = await response.json();
   return data.color.name;
 }
 
 // Load more Pokémon and append to the existing list
 async function loadMorePokemon() {
-  const offset = pokedexData.length;
-  const limit = 20;
-  let fetchMoreUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+  offset = pokedexData.length;
   showLoadingSpinner(true);
-  const responseNewPokemon = await fetch(fetchMoreUrl);
+  const responseNewPokemon = await fetch(
+    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
+  );
   const dataNewPokemon = await responseNewPokemon.json();
   const newPokemonEntries = dataNewPokemon.results;
 
@@ -61,7 +70,8 @@ async function loadMorePokemon() {
 async function loadMorePokemonDetails(newPokemonEntries) {
   for (
     let entryIndex = 0;
-    entryIndex < newPokemonEntries.length; entryIndex++
+    entryIndex < newPokemonEntries.length;
+    entryIndex++
   ) {
     const entry = newPokemonEntries[entryIndex];
     const details = await fetch(entry.url).then((response) => response.json());
@@ -112,10 +122,9 @@ function nextPokemon() {
 
 // Load additional details for the Pokémon modal
 async function loadPokemonModalExtraDetails(currentPokemonIndex) {
-  let fetchDetailsUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemonIndex + 1}/`;
-  const details = await fetch(fetchDetailsUrl).then((response) =>
-    response.json(),
-  );
+  const details = await fetch(
+    BASE_URL + EXTRA_DETAILS_URL + (currentPokemonIndex + 1) + "/",
+  ).then((response) => response.json());
   const abilities = extractPokemonAbilities(details);
   const height = details.height / 10;
   const weight = details.weight / 10;
@@ -137,11 +146,14 @@ function extractPokemonStats(details) {
     const statValue = details.stats[indexStats].base_stat;
     stats[statName] = statValue;
     if (statName === "hp") {
-      stats["hp"] = statValue;}
+      stats["hp"] = statValue;
+    }
     if (statName === "attack") {
-      stats["attack"] = statValue;}
+      stats["attack"] = statValue;
+    }
     if (statName === "defense") {
-      stats["defense"] = statValue;}
+      stats["defense"] = statValue;
+    }
   }
   return stats;
 }
