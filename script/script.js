@@ -1,3 +1,5 @@
+let pokedexData = [];
+
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=25&offset=0";
 
 let currentPokemonIndex = 0;
