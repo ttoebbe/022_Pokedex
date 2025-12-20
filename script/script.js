@@ -14,13 +14,13 @@ let currentPokemonIndex = 0;
 
 async function onloadInit() {
   showLoadingSpinner(true);
-  await loadLocalData();
+  await loadPokemonBaseData();
   showLoadingSpinner(false);
   renderPokedexListView();
 }
 
 // Load initial data from the API into local storage and into the pokedexData variable
-async function loadLocalData() {
+async function loadPokemonBaseData() {
   const response = await fetch(
     BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
   );
