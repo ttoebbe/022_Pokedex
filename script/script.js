@@ -12,7 +12,16 @@ const EXTRA_DETAILS_URL = "pokemon/";
 
 let currentPokemonIndex = 0;
 
+// Initial load of Pokémon data
 async function onloadInit() {
+  showLoadingSpinner(true);
+  await loadPokemonBaseData();
+  showLoadingSpinner(false);
+  renderPokedexListView();
+}
+
+// Load more Pokémon and append to the existing list
+async function loadMorePokemon() {
   showLoadingSpinner(true);
   await loadPokemonBaseData();
   showLoadingSpinner(false);
@@ -25,55 +34,15 @@ async function loadPokemonBaseData() {
     BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
   );
   const data = await response.json();
-  pokedexData = data.results;
-  await loadPokemonDetails();
+  const newEntries = data.results;
+  await loadPokemonDetails(newEntries);
+  offset += limit;
 }
 
 // Fetch Pokémon details from the API for initial load
-async function loadPokemonDetails() {
-  for (let i = 0; i < pokedexData.length; i++) {
-    const entry = pokedexData[i];
-    const details = await fetch(entry.url).then((response) => response.json());
-    pokedexData[i] = {
-      id: details.id,
-      name: entry.name.toUpperCase(),
-      sprite: details.sprites.front_default,
-      types: details.types.map((typeObj) => typeObj.type.name),
-      color: await getPokemonColor(details.id),
-    };
-  }
-}
-
-// In list view, the background color of the card should be adjusted according to the Pokémon's type
-async function getPokemonColor(pokemonId) {
-  const response = await fetch(BASE_URL + COLOR_URL + pokemonId + "/");
-  const data = await response.json();
-  return data.color.name;
-}
-
-// Load more Pokémon and append to the existing list
-async function loadMorePokemon() {
-  offset = pokedexData.length;
-  showLoadingSpinner(true);
-  const responseNewPokemon = await fetch(
-    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
-  );
-  const dataNewPokemon = await responseNewPokemon.json();
-  const newPokemonEntries = dataNewPokemon.results;
-
-  await loadMorePokemonDetails(newPokemonEntries);
-  showLoadingSpinner(false);
-  renderPokedexListView();
-}
-
-// Load more Pokémon details and append to the existing list
-async function loadMorePokemonDetails(newPokemonEntries) {
-  for (
-    let entryIndex = 0;
-    entryIndex < newPokemonEntries.length;
-    entryIndex++
-  ) {
-    const entry = newPokemonEntries[entryIndex];
+async function loadPokemonDetails(newEntries) {
+  for (let i = 0; i < newEntries.length; i++) {
+    const entry = newEntries[i];
     const details = await fetch(entry.url).then((response) => response.json());
     pokedexData.push({
       id: details.id,
@@ -83,6 +52,13 @@ async function loadMorePokemonDetails(newPokemonEntries) {
       color: await getPokemonColor(details.id),
     });
   }
+}
+
+// In list view, the background color of the card should be adjusted according to the Pokémon's type
+async function getPokemonColor(pokemonId) {
+  const response = await fetch(BASE_URL + COLOR_URL + pokemonId + "/");
+  const data = await response.json();
+  return data.color.name;
 }
 
 // Show/hide loading indicator
