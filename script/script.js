@@ -185,8 +185,8 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     height,
     weight,
     hpAttackDefense,
-    pokemon.color,
-    pokemon.textColor
+    // pokemon.color,
+    // pokemon.textColor
   );
   document.body.classList.add("modal-open");
 }
