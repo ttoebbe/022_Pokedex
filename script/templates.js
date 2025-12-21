@@ -52,11 +52,11 @@ function renderPokemonModal(
         <h2 class="modal-pokemon-title" style="color: ${pokemon.textColor}">#${pokemon.id} ${pokemon.name}</h2>
         <div class="pokemon-types">${renderTypeBadges(pokemon.types)}</div>
         <div class="modal-pokemon-details">
-          <p><strong>Abilities:</strong> ${abilities}</p>
-          <p><strong>Height:</strong> ${height} m</p>
-          <p><strong>Weight:</strong> ${weight} kg</p>
+          <p style="color: ${pokemon.textColor}"><strong>Abilities:</strong> ${abilities}</p>
+          <p style="color: ${pokemon.textColor}"><strong>Height:</strong> ${height} m</p>
+          <p style="color: ${pokemon.textColor}"><strong>Weight:</strong> ${weight} kg</p>
 
-          <div class="stat-container">
+          <div class="stat-container" style="color: ${pokemon.textColor}">
             <strong>HP:</strong>
             <div class="progress">
               <div
@@ -69,7 +69,7 @@ function renderPokemonModal(
             </div>
           </div>
 
-          <div class="stat-container">
+          <div class="stat-container" style="color: ${pokemon.textColor}">
             <strong>Attack:</strong>
             <div class="progress">
               <div
@@ -81,7 +81,7 @@ function renderPokemonModal(
               </div>
             </div>
           </div>
-          <div class="stat-container">
+          <div class="stat-container" style="color: ${pokemon.textColor}">
             <strong>Defense:</strong>
             <div class="progress">
               <div

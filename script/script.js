@@ -125,12 +125,16 @@ async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const height = details.height / 10;
   const weight = details.weight / 10;
   const hpAttackDefense = extractPokemonStats(details);
+  const pokemonColor = pokedexData[currentPokemonIndex].color;
+  const textColor = pokedexData[currentPokemonIndex].textColor;
   openPokemonModal(
     currentPokemonIndex,
     abilities,
     height,
     weight,
     hpAttackDefense,
+    pokemonColor,
+    textColor
   );
 }
 
@@ -183,6 +187,8 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     height,
     weight,
     hpAttackDefense,
+    pokemon.color,
+    pokemon.textColor,
   );
   document.body.classList.add("modal-open");
 }
