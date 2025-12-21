@@ -2,7 +2,7 @@ let pokedexData = [];
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 const LIMIT_URL = "pokemon?limit=";
-let limit = 7;
+let limit = 22;
 const OFFSET_URL = "&offset=";
 let offset = 0;
 const COLOR_URL = "pokemon-species/";
