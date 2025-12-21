@@ -192,6 +192,7 @@ body.modal-open {
   display: flex;
   flex-direction: column;
   text-align: center;
+  align-items: center;
   overflow-y: auto;
   background-color: #fff;
   border-radius: 20px;
