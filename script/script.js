@@ -12,6 +12,17 @@ const EXTRA_DETAILS_URL = "pokemon/";
 
 let currentPokemonIndex = 0;
 
+//auf Basis der Hintergrundfarbe die passende Textfarbe definieren
+const COLOR_CONTRAST_MAP = {
+  green: "#221ee2ff",
+  red: "#101111ff",
+  blue: "#d0dc51ff",
+  brown: "#F5F1E6",
+  purple: "#F9F7FF",
+  white: "#4d4ae2ff",
+  yellow: "#1A1300",
+};
+
 // Initial load of Pokémon data
 async function onloadInit() {
   showLoadingSpinner(true);
@@ -44,15 +55,24 @@ async function loadPokemonDetails(newEntries) {
   for (let i = 0; i < newEntries.length; i++) {
     const entry = newEntries[i];
     const details = await fetch(entry.url).then((response) => response.json());
+    const pokemonColor = await getPokemonColor(details.id);
     pokedexData.push({
       id: details.id,
       name: entry.name.toUpperCase(),
       sprite: details.sprites.front_default,
       types: details.types.map((typeObj) => typeObj.type.name),
-      color: await getPokemonColor(details.id),
+      color: pokemonColor,
+      textColor: textColorMapper(pokemonColor),
     });
   }
 }
+
+//Textfarbe basierend auf der Hintergrundfarbe holen
+function textColorMapper(backgroundColor) {
+  return COLOR_CONTRAST_MAP[backgroundColor] || "#000000";
+}
+
+
 
 // In list view, the background color of the card should be adjusted according to the Pokémon's type
 async function getPokemonColor(pokemonId) {

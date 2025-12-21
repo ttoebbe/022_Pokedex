@@ -20,7 +20,7 @@ function renderPokemonItem(pokemon, index) {
       style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${pokemon.color};"
     >
       <img class="pokemon-img" src="${pokemon.sprite}" alt="${pokemon.name}" />
-      <h3 class="pokemon-title">#${pokemon.id} ${pokemon.name}</h3>
+      <h3 class="pokemon-title" style="color: ${pokemon.textColor}">#${pokemon.id} ${pokemon.name}</h3>
       <div class="pokemon-types">${renderTypeBadges(pokemon.types)}</div>
     </article>`;
 }
@@ -49,7 +49,7 @@ function renderPokemonModal(
           src="${pokemon.sprite}"
           alt="${pokemon.name}"
         />
-        <h2 class="modal-pokemon-title">#${pokemon.id} ${pokemon.name}</h2>
+        <h2 class="modal-pokemon-title" style="color: ${pokemon.textColor}">#${pokemon.id} ${pokemon.name}</h2>
         <div class="pokemon-types">${renderTypeBadges(pokemon.types)}</div>
         <div class="modal-pokemon-details">
           <p><strong>Abilities:</strong> ${abilities}</p>
