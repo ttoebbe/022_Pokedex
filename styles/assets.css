@@ -51,6 +51,16 @@
   display: none;
 }
 
+#search-message {
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 /* Pokedex Container and Items */
 #pokedex-container {
   display: grid;

@@ -42,7 +42,7 @@ async function loadMorePokemon() {
 // Load initial data from the API into local storage and into the pokedexData variable
 async function loadPokemonBaseData() {
   const response = await fetch(
-    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
+    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset
   );
   const data = await response.json();
   const newEntries = data.results;
@@ -71,8 +71,6 @@ async function loadPokemonDetails(newEntries) {
 function textColorMapper(backgroundColor) {
   return COLOR_CONTRAST_MAP[backgroundColor] || "#000000";
 }
-
-
 
 // In list view, the background color of the card should be adjusted according to the Pokémon's type
 async function getPokemonColor(pokemonId) {
@@ -119,7 +117,7 @@ function nextPokemon() {
 // Load additional details for the Pokémon modal
 async function loadPokemonModalExtraDetails(currentPokemonIndex) {
   const details = await fetch(
-    BASE_URL + EXTRA_DETAILS_URL + (currentPokemonIndex + 1) + "/",
+    BASE_URL + EXTRA_DETAILS_URL + (currentPokemonIndex + 1) + "/"
   ).then((response) => response.json());
   const abilities = extractPokemonAbilities(details);
   const height = details.height / 10;
@@ -188,7 +186,7 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     weight,
     hpAttackDefense,
     pokemon.color,
-    pokemon.textColor,
+    pokemon.textColor
   );
   document.body.classList.add("modal-open");
 }
@@ -214,12 +212,17 @@ function extractPokemonAbilities(details) {
 // Search function for Pokémon in the Pokedex
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase();
+  const message = document.getElementById("search-message");
   toggleClearButton(searchInput);
 
-  if (searchInput.length < 3) {
-    renderPokedexListView();
-    return;
+  if (searchInput.length > 0 && searchInput.length < 3) {
+    message.textContent = " 3 characters required";
+    message.classList.remove("d-none");
+    return; 
+  } else {
+    message.classList.add("d-none");
   }
+
   renderFilteredPokemon(searchInput);
 }
 
