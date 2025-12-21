@@ -184,9 +184,7 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     abilities,
     height,
     weight,
-    hpAttackDefense,
-    // pokemon.color,
-    // pokemon.textColor
+    hpAttackDefense
   );
   document.body.classList.add("modal-open");
 }
@@ -218,7 +216,7 @@ function searchPokemon() {
   if (searchInput.length > 0 && searchInput.length < 3) {
     message.textContent = " 3 characters required";
     message.classList.remove("d-none");
-    return; 
+    return;
   } else {
     message.classList.add("d-none");
   }
