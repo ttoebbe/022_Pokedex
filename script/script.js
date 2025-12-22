@@ -50,6 +50,8 @@ async function loadPokemonBaseData() {
   offset += limit;
 }
 
+
+
 // Fetch Pokémon details from the API for initial load
 async function loadPokemonDetails(newEntries) {
   for (let i = 0; i < newEntries.length; i++) {
@@ -63,6 +65,10 @@ async function loadPokemonDetails(newEntries) {
       types: details.types.map((typeObj) => typeObj.type.name),
       color: pokemonColor,
       textColor: textColorMapper(pokemonColor),
+      height: details.height / 10,
+      weight: details.weight / 10,
+      hpAttackDefense: extractPokemonStats(details),
+      abilities: extractPokemonAbilities(details),
     });
   }
 }
@@ -115,24 +121,14 @@ function nextPokemon() {
 }
 
 // Load additional details for the Pokémon modal
-async function loadPokemonModalExtraDetails(currentPokemonIndex) {
-  const details = await fetch(
-    BASE_URL + EXTRA_DETAILS_URL + (currentPokemonIndex + 1) + "/"
-  ).then((response) => response.json());
-  const abilities = extractPokemonAbilities(details);
-  const height = details.height / 10;
-  const weight = details.weight / 10;
-  const hpAttackDefense = extractPokemonStats(details);
-  const pokemonColor = pokedexData[currentPokemonIndex].color;
-  const textColor = pokedexData[currentPokemonIndex].textColor;
+function loadPokemonModalExtraDetails(currentPokemonIndex) {
+  const pokemon = pokedexData[currentPokemonIndex];
   openPokemonModal(
     currentPokemonIndex,
-    abilities,
-    height,
-    weight,
-    hpAttackDefense,
-    pokemonColor,
-    textColor
+    pokemon.abilities,
+    pokemon.height,
+    pokemon.weight,
+    pokemon.hpAttackDefense
   );
 }
 
