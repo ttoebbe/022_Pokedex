@@ -16,7 +16,7 @@ function renderPokemonItem(pokemon, index) {
       class="pokedex-item"
       id="pokemon-${pokemon.id}"
       data-index="${index}"
-      onclick="loadPokemonModalExtraDetails(${index})"
+      onclick="loadPokemonModalBaseData(${index})"
       style="background: linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)), ${
         pokemon.color
       };"

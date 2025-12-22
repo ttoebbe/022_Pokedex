@@ -2,13 +2,15 @@ const pokedexData = [];
 
 const BASE_URL = "https://pokeapi.co/api/v2/";
 const LIMIT_URL = "pokemon?limit=";
-const limit = 3;
+const limit = 21;
 const OFFSET_URL = "&offset=";
 let offset = 0;
 const COLOR_URL = "pokemon-species/";
 const EXTRA_DETAILS_URL = "pokemon/";
 
-// const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=25&offset=0";
+let filteredPokedexData = [];
+let currentFilteredIndex = 0;
+let isFiltering = false;
 
 let currentPokemonIndex = 0;
 
@@ -42,15 +44,13 @@ async function loadMorePokemon() {
 // Load initial data from the API into local storage and into the pokedexData variable
 async function loadPokemonBaseData() {
   const response = await fetch(
-    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset
+    BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
   );
   const data = await response.json();
   const newEntries = data.results;
   await loadPokemonDetails(newEntries);
   offset += limit;
 }
-
-
 
 // Fetch Pokémon details from the API for initial load
 async function loadPokemonDetails(newEntries) {
@@ -100,35 +100,57 @@ function closePokemonModal() {
   const modalContainer = document.getElementById("modal-container");
   modalContainer.innerHTML = "";
   document.body.classList.remove("modal-open");
+  currentFilteredIndex = 0;
+  currentPokemonIndex = 0;
 }
 
 // Modal navigation to previous Pokémon
 function previousPokemon() {
+  if (isFiltering) {
+    currentFilteredIndex--;
+    if (currentFilteredIndex < 0) {
+      currentFilteredIndex = filteredPokedexData.length - 1;
+    }
+    loadPokemonModalBaseData(
+      filteredPokedexData[currentFilteredIndex].originalIndex,
+    );
+    return;
+  }
   currentPokemonIndex--;
   if (currentPokemonIndex < 0) {
     currentPokemonIndex = pokedexData.length - 1;
   }
-  loadPokemonModalExtraDetails(currentPokemonIndex);
+  loadPokemonModalBaseData(currentPokemonIndex);
 }
 
 // Modal navigation to next Pokémon
 function nextPokemon() {
+  if (isFiltering) {
+    currentFilteredIndex++;
+    if (currentFilteredIndex >= filteredPokedexData.length) {
+      currentFilteredIndex = 0;
+    }
+    loadPokemonModalBaseData(
+      filteredPokedexData[currentFilteredIndex].originalIndex,
+    );
+    return;
+  }
   currentPokemonIndex++;
   if (currentPokemonIndex >= pokedexData.length) {
     currentPokemonIndex = 0;
   }
-  loadPokemonModalExtraDetails(currentPokemonIndex);
+  loadPokemonModalBaseData(currentPokemonIndex);
 }
 
 // Load additional details for the Pokémon modal
-function loadPokemonModalExtraDetails(currentPokemonIndex) {
-  const pokemon = pokedexData[currentPokemonIndex];
+function loadPokemonModalBaseData(index) {
+  const pokemon = pokedexData[index];
   openPokemonModal(
-    currentPokemonIndex,
+    index,
     pokemon.abilities,
     pokemon.height,
     pokemon.weight,
-    pokemon.hpAttackDefense
+    pokemon.hpAttackDefense,
   );
 }
 
@@ -180,7 +202,7 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     abilities,
     height,
     weight,
-    hpAttackDefense
+    hpAttackDefense,
   );
   document.body.classList.add("modal-open");
 }
@@ -212,12 +234,21 @@ function searchPokemon() {
   if (searchInput.length > 0 && searchInput.length < 3) {
     message.textContent = " 3 characters required";
     message.classList.remove("d-none");
+    isFiltering = false;
+    filteredPokedexData = [];
     return;
   } else {
     message.classList.add("d-none");
   }
 
-  renderFilteredPokemon(searchInput);
+  if (searchInput.length >= 3) {
+    isFiltering = true;
+    renderFilteredPokemon(searchInput);
+  } else {
+    isFiltering = false;
+    filteredPokedexData = [];
+    renderPokedexListView();
+  }
 }
 
 // Show/hide clear button
@@ -234,9 +265,14 @@ function toggleClearButton(searchInput) {
 function renderFilteredPokemon(searchInput) {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
+  filteredPokedexData = [];
   for (let index = 0; index < pokedexData.length; index++) {
     if (pokedexData[index].name.toLowerCase().includes(searchInput)) {
       html += renderPokemonItem(pokedexData[index], index);
+      filteredPokedexData.push({
+        ...pokedexData[index],
+        originalIndex: index,
+      });
     }
   }
   if (html.length === 0) {
@@ -250,4 +286,6 @@ function clearSearch() {
   document.getElementById("search-bar").value = "";
   document.getElementById("clear-search-btn").classList.add("d-none");
   renderPokedexListView();
+  isFiltering = false;
+  filteredPokedexData = [];
 }
