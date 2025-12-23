@@ -77,20 +77,32 @@ async function loadPokemonDetails(newEntries) {
   for (let i = 0; i < newEntries.length; i++) {
     const entry = newEntries[i];
     const details = await fetch(entry.url).then((response) => response.json());
-    const pokemonColor = await getPokemonColor(details.id);
-    pokedexData.push({
-      id: details.id,
-      name: entry.name.toUpperCase(),
-      sprite: details.sprites.front_default,
-      types: details.types.map((typeObj) => typeObj.type.name),
-      color: pokemonColor,
-      textColor: textColorMapper(pokemonColor),
-      height: details.height / 10,
-      weight: details.weight / 10,
-      hpAttackDefense: extractPokemonStats(details),
-      abilities: extractPokemonAbilities(details),
-    });
+    const pokemonData = await createPokemonData(entry, details);
+    pokedexData.push(pokemonData);
   }
+}
+
+/**
+ * Create a Pokemon data object from API response
+ * @async
+ * @param {Object} entry - Basic Pokemon entry with name and url
+ * @param {Object} details - Detailed Pokemon data from API
+ * @returns {Promise<Object>} Formatted Pokemon data object
+ */
+async function createPokemonData(entry, details) {
+  const pokemonColor = await getPokemonColor(details.id);
+  return {
+    id: details.id,
+    name: entry.name.toUpperCase(),
+    sprite: details.sprites.front_default,
+    types: details.types.map((typeObj) => typeObj.type.name),
+    color: pokemonColor,
+    textColor: textColorMapper(pokemonColor),
+    height: details.height / 10,
+    weight: details.weight / 10,
+    hpAttackDefense: extractPokemonStats(details),
+    abilities: extractPokemonAbilities(details),
+  };
 }
 
 /**
@@ -208,20 +220,25 @@ function loadPokemonModalBaseData(index) {
 function extractPokemonStats(details) {
   let stats = {};
   for (let indexStats = 0; indexStats < details.stats.length; indexStats++) {
-    const statName = details.stats[indexStats].stat.name;
-    const statValue = details.stats[indexStats].base_stat;
-    stats[statName] = statValue;
-    if (statName === "hp") {
-      stats["hp"] = statValue;
-    }
-    if (statName === "attack") {
-      stats["attack"] = statValue;
-    }
-    if (statName === "defense") {
-      stats["defense"] = statValue;
-    }
+    processSingleStat(details.stats[indexStats], stats);
   }
   return stats;
+}
+
+/**
+ * Process a single stat and add it to stats object
+ * @param {Object} stat - Single stat object from API
+ * @param {Object} stats - Stats object to update
+ * @returns {void}
+ */
+function processSingleStat(stat, stats) {
+  const statName = stat.stat.name;
+  const statValue = stat.base_stat;
+  stats[statName] = statValue;
+  
+  if (statName === "hp" || statName === "attack" || statName === "defense") {
+    stats[statName] = statValue;
+  }
 }
 
 /**
@@ -304,19 +321,42 @@ function extractPokemonAbilities(details) {
  */
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase();
-  const message = document.getElementById("search-message");
   toggleClearButton(searchInput);
 
+  if (!validateSearchInput(searchInput)) {
+    return;
+  }
+
+  performSearch(searchInput);
+  toggleVisibilityMorePokemonButton();
+}
+
+/**
+ * Validate search input and show appropriate message
+ * @param {string} searchInput - The search query
+ * @returns {boolean} True if valid, false otherwise
+ */
+function validateSearchInput(searchInput) {
+  const message = document.getElementById("search-message");
+  
   if (searchInput.length > 0 && searchInput.length < 3) {
     message.textContent = " 3 characters required";
     message.classList.remove("d-none");
     isFiltering = false;
     filteredPokedexData = [];
-    return;
-  } else {
-    message.classList.add("d-none");
+    return false;
   }
+  
+  message.classList.add("d-none");
+  return true;
+}
 
+/**
+ * Perform the actual search or reset view
+ * @param {string} searchInput - The search query
+ * @returns {void}
+ */
+function performSearch(searchInput) {
   if (searchInput.length >= 3) {
     isFiltering = true;
     renderFilteredPokemon(searchInput);
@@ -325,7 +365,6 @@ function searchPokemon() {
     filteredPokedexData = [];
     renderPokedexListView();
   }
-  toggleVisibilityMorePokemonButton();
 }
 
 /**
