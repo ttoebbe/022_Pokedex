@@ -14,7 +14,10 @@ let isFiltering = false;
 
 let currentPokemonIndex = 0;
 
-//auf Basis der Hintergrundfarbe die passende Textfarbe definieren
+/**
+ * Map of background colors to their corresponding text colors for optimal contrast
+ * @type {Object.<string, string>}
+ */
 const COLOR_CONTRAST_MAP = {
   green: "#221ee2ff",
   red: "#101111ff",
@@ -25,7 +28,11 @@ const COLOR_CONTRAST_MAP = {
   yellow: "#1A1300",
 };
 
-// Initial load of Pokémon data
+/**
+ * Initial load of Pokémon data on page load
+ * @async
+ * @returns {Promise<void>}
+ */
 async function onloadInit() {
   showLoadingSpinner(true);
   await loadPokemonBaseData();
@@ -33,7 +40,11 @@ async function onloadInit() {
   renderPokedexListView();
 }
 
-// Load more Pokémon and append to the existing list
+/**
+ * Load more Pokémon and append to the existing list
+ * @async
+ * @returns {Promise<void>}
+ */
 async function loadMorePokemon() {
   showLoadingSpinner(true);
   await loadPokemonBaseData();
@@ -41,7 +52,11 @@ async function loadMorePokemon() {
   renderPokedexListView();
 }
 
-// Load initial data from the API into local storage and into the pokedexData variable
+/**
+ * Load initial data from the API into local storage and into the pokedexData variable
+ * @async
+ * @returns {Promise<void>}
+ */
 async function loadPokemonBaseData() {
   const response = await fetch(
     BASE_URL + LIMIT_URL + limit + OFFSET_URL + offset,
@@ -52,7 +67,12 @@ async function loadPokemonBaseData() {
   offset += limit;
 }
 
-// Fetch Pokémon details from the API for initial load
+/**
+ * Fetch Pokémon details from the API for initial load
+ * @async
+ * @param {Array<Object>} newEntries - Array of Pokémon entries with name and url
+ * @returns {Promise<void>}
+ */
 async function loadPokemonDetails(newEntries) {
   for (let i = 0; i < newEntries.length; i++) {
     const entry = newEntries[i];
@@ -73,19 +93,32 @@ async function loadPokemonDetails(newEntries) {
   }
 }
 
-//Textfarbe basierend auf der Hintergrundfarbe holen
+/**
+ * Get text color based on background color for optimal contrast
+ * @param {string} backgroundColor - The background color name
+ * @returns {string} The corresponding text color in hex format
+ */
 function textColorMapper(backgroundColor) {
   return COLOR_CONTRAST_MAP[backgroundColor] || "#000000";
 }
 
-// In list view, the background color of the card should be adjusted according to the Pokémon's type
+/**
+ * Fetch the background color of a Pokémon based on its species
+ * @async
+ * @param {number} pokemonId - The ID of the Pokémon
+ * @returns {Promise<string>} The color name of the Pokémon
+ */
 async function getPokemonColor(pokemonId) {
   const response = await fetch(BASE_URL + COLOR_URL + pokemonId + "/");
   const data = await response.json();
   return data.color.name;
 }
 
-// Show/hide loading indicator
+/**
+ * Show or hide the loading spinner overlay
+ * @param {boolean} isLoading - Whether to show (true) or hide (false) the spinner
+ * @returns {void}
+ */
 function showLoadingSpinner(isLoading) {
   let overlay = document.getElementById("loading-overlay");
   if (isLoading) {
@@ -95,7 +128,10 @@ function showLoadingSpinner(isLoading) {
   }
 }
 
-// Close the Pokémon modal
+/**
+ * Close the Pokémon modal and reset state
+ * @returns {void}
+ */
 function closePokemonModal() {
   const modalContainer = document.getElementById("modal-container");
   modalContainer.innerHTML = "";
@@ -104,7 +140,10 @@ function closePokemonModal() {
   currentPokemonIndex = 0;
 }
 
-// Modal navigation to previous Pokémon
+/**
+ * Navigate to the previous Pokémon in the modal
+ * @returns {void}
+ */
 function previousPokemon() {
   if (isFiltering) {
     currentFilteredIndex--;
@@ -123,7 +162,10 @@ function previousPokemon() {
   loadPokemonModalBaseData(currentPokemonIndex);
 }
 
-// Modal navigation to next Pokémon
+/**
+ * Navigate to the next Pokémon in the modal
+ * @returns {void}
+ */
 function nextPokemon() {
   if (isFiltering) {
     currentFilteredIndex++;
@@ -142,7 +184,11 @@ function nextPokemon() {
   loadPokemonModalBaseData(currentPokemonIndex);
 }
 
-// Load additional details for the Pokémon modal
+/**
+ * Load additional details for the Pokémon modal
+ * @param {number} index - The index of the Pokémon in the pokedexData array
+ * @returns {void}
+ */
 function loadPokemonModalBaseData(index) {
   const pokemon = pokedexData[index];
   openPokemonModal(
@@ -154,7 +200,11 @@ function loadPokemonModalBaseData(index) {
   );
 }
 
-// Extract hp, attack and defense, as these should now also be displayed on the modal
+/**
+ * Extract HP, Attack and Defense stats from Pokémon details
+ * @param {Object} details - The detailed Pokémon data from the API
+ * @returns {Object} Object containing hp, attack, and defense values
+ */
 function extractPokemonStats(details) {
   let stats = {};
   for (let indexStats = 0; indexStats < details.stats.length; indexStats++) {
@@ -174,7 +224,11 @@ function extractPokemonStats(details) {
   return stats;
 }
 
-// Extract type names
+/**
+ * Extract type names from Pokémon details
+ * @param {Object} details - The detailed Pokémon data from the API
+ * @returns {string} Comma-separated list of type names
+ */
 function extractPokemonTypes(details) {
   let types = [];
   for (let i = 0; i < details.types.length; i++) {
@@ -183,7 +237,10 @@ function extractPokemonTypes(details) {
   return types.join(", ");
 }
 
-// Initial display of the Pokédex list
+/**
+ * Render the complete Pokédex list view
+ * @returns {void}
+ */
 function renderPokedexListView() {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
@@ -193,7 +250,15 @@ function renderPokedexListView() {
   listContainer.innerHTML = html;
 }
 
-// Open the modal with Pokémon details
+/**
+ * Open the modal with detailed Pokémon information
+ * @param {number} index - The index of the Pokémon in the pokedexData array
+ * @param {string} abilities - Comma-separated list of abilities
+ * @param {number} height - Height of the Pokémon in meters
+ * @param {number} weight - Weight of the Pokémon in kilograms
+ * @param {Object} hpAttackDefense - Object containing hp, attack, and defense values
+ * @returns {void}
+ */
 function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   const pokemon = pokedexData[index];
   currentPokemonIndex = index;
@@ -207,7 +272,11 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   document.body.classList.add("modal-open");
 }
 
-// Helper function to render type badges
+/**
+ * Render type badges HTML for a Pokémon
+ * @param {Array<string>} types - Array of type names
+ * @returns {string} HTML string containing all type badges
+ */
 function renderTypeBadges(types) {
   let html = "";
   for (let i = 0; i < types.length; i++) {
@@ -216,7 +285,11 @@ function renderTypeBadges(types) {
   return html;
 }
 
-// Extract ability names
+/**
+ * Extract ability names from Pokémon details
+ * @param {Object} details - The detailed Pokémon data from the API
+ * @returns {string} Comma-separated list of ability names
+ */
 function extractPokemonAbilities(details) {
   let abilities = [];
   for (let i = 0; i < details.abilities.length; i++) {
@@ -225,7 +298,10 @@ function extractPokemonAbilities(details) {
   return abilities.join(", ");
 }
 
-// Search function for Pokémon in the Pokedex
+/**
+ * Search for Pokémon in the Pokedex based on user input
+ * @returns {void}
+ */
 function searchPokemon() {
   const searchInput = document.getElementById("search-bar").value.toLowerCase();
   const message = document.getElementById("search-message");
@@ -252,7 +328,11 @@ function searchPokemon() {
   toggleVisibilityMorePokemonButton();
 }
 
-// Show/hide clear button
+/**
+ * Show or hide the clear search button
+ * @param {string} searchInput - The current search input value
+ * @returns {void}
+ */
 function toggleClearButton(searchInput) {
   const clearBtn = document.getElementById("clear-search-btn");
   if (searchInput.length > 0) {
@@ -262,7 +342,11 @@ function toggleClearButton(searchInput) {
   }
 }
 
-// Render filtered Pokemon list
+/**
+ * Render filtered Pokémon list based on search input
+ * @param {string} searchInput - The search query to filter Pokémon
+ * @returns {void}
+ */
 function renderFilteredPokemon(searchInput) {
   const listContainer = document.getElementById("pokedex-container");
   let html = "";
@@ -282,7 +366,10 @@ function renderFilteredPokemon(searchInput) {
   listContainer.innerHTML = html;
 }
 
-// Clear search field
+/**
+ * Clear the search field and reset the view
+ * @returns {void}
+ */
 function clearSearch() {
   document.getElementById("search-bar").value = "";
   document.getElementById("clear-search-btn").classList.add("d-none");
@@ -292,7 +379,10 @@ function clearSearch() {
   toggleVisibilityMorePokemonButton();
 }
 
-// Show/hide "Load More" button based on filtering state
+/**
+ * Show or hide the "Load More" button based on filtering state
+ * @returns {void}
+ */
 function toggleVisibilityMorePokemonButton() {
   const morePokemonBtn = document.getElementById("more-pokemon-btn");
   if (isFiltering) {

@@ -1,4 +1,7 @@
-// HTML for the loading spinner
+/**
+ * Generate HTML for the loading spinner
+ * @returns {string} HTML string for the loading spinner
+ */
 function loadingSpinnerHTML() {
   return /* html */ `
     <div class="loading-spinner-container">
@@ -9,7 +12,12 @@ function loadingSpinnerHTML() {
   `;
 }
 
-// HTML for a single Pokémon item
+/**
+ * Generate HTML for a single Pokémon item card
+ * @param {Object} pokemon - The Pokémon data object
+ * @param {number} index - The index of the Pokémon in the array
+ * @returns {string} HTML string for the Pokémon item
+ */
 function renderPokemonItem(pokemon, index) {
   return /* html */ `
     <article
@@ -29,7 +37,15 @@ function renderPokemonItem(pokemon, index) {
     </article>`;
 }
 
-// HTML for the modal window
+/**
+ * Generate HTML for the Pokémon modal window
+ * @param {Object} pokemon - The Pokémon data object
+ * @param {string} abilities - Comma-separated list of abilities
+ * @param {number} height - Height of the Pokémon in meters
+ * @param {number} weight - Weight of the Pokémon in kilograms
+ * @param {Object} hpAttackDefense - Object containing hp, attack, and defense values
+ * @returns {string} HTML string for the Pokémon modal
+ */
 function renderPokemonModal(
   pokemon,
   abilities,
