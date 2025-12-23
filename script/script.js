@@ -249,6 +249,7 @@ function searchPokemon() {
     filteredPokedexData = [];
     renderPokedexListView();
   }
+  toggleVisibilityMorePokemonButton();
 }
 
 // Show/hide clear button
@@ -288,4 +289,15 @@ function clearSearch() {
   renderPokedexListView();
   isFiltering = false;
   filteredPokedexData = [];
+  toggleVisibilityMorePokemonButton();
+}
+
+// Show/hide "Load More" button based on filtering state
+function toggleVisibilityMorePokemonButton() {
+  const morePokemonBtn = document.getElementById("more-pokemon-btn");
+  if (isFiltering) {
+    morePokemonBtn.classList.add("d-none");
+  } else {
+    morePokemonBtn.classList.remove("d-none");
+  }
 }
