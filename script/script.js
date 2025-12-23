@@ -235,7 +235,7 @@ function processSingleStat(stat, stats) {
   const statName = stat.stat.name;
   const statValue = stat.base_stat;
   stats[statName] = statValue;
-  
+
   if (statName === "hp" || statName === "attack" || statName === "defense") {
     stats[statName] = statValue;
   }
@@ -279,6 +279,9 @@ function renderPokedexListView() {
 function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
   const pokemon = pokedexData[index];
   currentPokemonIndex = index;
+  if (isFiltering) {
+    currentFilteredIndex = findIndexInFilteredData(index);
+  }
   document.getElementById("modal-container").innerHTML = renderPokemonModal(
     pokemon,
     abilities,
@@ -287,6 +290,19 @@ function openPokemonModal(index, abilities, height, weight, hpAttackDefense) {
     hpAttackDefense,
   );
   document.body.classList.add("modal-open");
+}
+
+/**
+ * Find the index of a Pokemon in the filtered array by its original index
+ * @param {number} originalIndex - The original index in pokedexData
+ * @returns {number} The index in filteredPokedexData, or 0 if not found
+ */
+function findIndexInFilteredData(originalIndex) {
+  for (let index = 0; index < filteredPokedexData.length; index++) {
+    if (filteredPokedexData[index].originalIndex === originalIndex) {
+      return index;
+    }
+  }
 }
 
 /**
@@ -338,7 +354,7 @@ function searchPokemon() {
  */
 function validateSearchInput(searchInput) {
   const message = document.getElementById("search-message");
-  
+
   if (searchInput.length > 0 && searchInput.length < 3) {
     message.textContent = " 3 characters required";
     message.classList.remove("d-none");
@@ -346,7 +362,7 @@ function validateSearchInput(searchInput) {
     filteredPokedexData = [];
     return false;
   }
-  
+
   message.classList.add("d-none");
   return true;
 }
