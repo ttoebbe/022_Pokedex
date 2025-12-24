@@ -153,33 +153,53 @@ function closePokemonModal() {
 }
 
 /**
- * Navigate to the next Pokémon in the modal
+ * Navigate to the next or previous Pokémon in the modal
+ * @param {string} direction - Either 'next' or 'previous'
  * @returns {void}
  */
 function nextPokemon(direction) {
   if (isFiltering) {
-    if (direction == "previous") {
-      currentFilteredIndex--;
-    } else {
-      currentFilteredIndex++;
-    }
-
-    if (currentFilteredIndex >= filteredPokedexData.length) {
-      currentFilteredIndex = 0;
-    }
-    if (currentFilteredIndex < 0) {
-      currentFilteredIndex = filteredPokedexData.length - 1;
-    }
-    loadPokemonModalBaseData(
-      filteredPokedexData[currentFilteredIndex].originalIndex,
-    );
-    return;
-  }
-  if (direction == "previous") {
-  currentPokemonIndex--;
+    navigateFilteredPokemon(direction);
   } else {
-  currentPokemonIndex++;
+    navigateAllPokemon(direction);
   }
+}
+
+/**
+ * Navigate through filtered Pokemon list
+ * @param {string} direction - Either 'next' or 'previous'
+ * @returns {void}
+ */
+function navigateFilteredPokemon(direction) {
+  if (direction == "previous") {
+    currentFilteredIndex--;
+  } else {
+    currentFilteredIndex++;
+  }
+
+  if (currentFilteredIndex >= filteredPokedexData.length) {
+    currentFilteredIndex = 0;
+  }
+  if (currentFilteredIndex < 0) {
+    currentFilteredIndex = filteredPokedexData.length - 1;
+  }
+  loadPokemonModalBaseData(
+    filteredPokedexData[currentFilteredIndex].originalIndex,
+  );
+}
+
+/**
+ * Navigate through complete Pokemon list
+ * @param {string} direction - Either 'next' or 'previous'
+ * @returns {void}
+ */
+function navigateAllPokemon(direction) {
+  if (direction == "previous") {
+    currentPokemonIndex--;
+  } else {
+    currentPokemonIndex++;
+  }
+
   if (currentPokemonIndex >= pokedexData.length) {
     currentPokemonIndex = 0;
   }
