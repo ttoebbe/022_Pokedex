@@ -153,12 +153,20 @@ function closePokemonModal() {
 }
 
 /**
- * Navigate to the previous Pokémon in the modal
+ * Navigate to the next Pokémon in the modal
  * @returns {void}
  */
-function previousPokemon() {
+function nextPokemon(direction) {
   if (isFiltering) {
-    currentFilteredIndex--;
+    if (direction == "previous") {
+      currentFilteredIndex--;
+    } else {
+      currentFilteredIndex++;
+    }
+
+    if (currentFilteredIndex >= filteredPokedexData.length) {
+      currentFilteredIndex = 0;
+    }
     if (currentFilteredIndex < 0) {
       currentFilteredIndex = filteredPokedexData.length - 1;
     }
@@ -167,31 +175,16 @@ function previousPokemon() {
     );
     return;
   }
+  if (direction == "previous") {
   currentPokemonIndex--;
-  if (currentPokemonIndex < 0) {
-    currentPokemonIndex = pokedexData.length - 1;
-  }
-  loadPokemonModalBaseData(currentPokemonIndex);
-}
-
-/**
- * Navigate to the next Pokémon in the modal
- * @returns {void}
- */
-function nextPokemon() {
-  if (isFiltering) {
-    currentFilteredIndex++;
-    if (currentFilteredIndex >= filteredPokedexData.length) {
-      currentFilteredIndex = 0;
-    }
-    loadPokemonModalBaseData(
-      filteredPokedexData[currentFilteredIndex].originalIndex,
-    );
-    return;
-  }
+  } else {
   currentPokemonIndex++;
+  }
   if (currentPokemonIndex >= pokedexData.length) {
     currentPokemonIndex = 0;
+  }
+  if (currentPokemonIndex < 0) {
+    currentPokemonIndex = pokedexData.length - 1;
   }
   loadPokemonModalBaseData(currentPokemonIndex);
 }
